@@ -1,0 +1,146 @@
+/* Basic Reset */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+/* HomePage Styles */
+.homepage {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.create-room-btn {
+  background-color: #334155;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #334155;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Welcome Section */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.welcome-section h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.welcome-section p {
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.welcome-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.new-room-btn, .join-room-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.new-room-btn {
+  background-color: #2563eb;
+  color: white;
+}
+
+.join-room-btn {
+  background-color: #334155;
+  color: white;
+}
+
+/* Tabs Section */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 40px;
+  color: #94a3b8;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  color: white;
+}
+
+/* Rooms Section */
+.rooms-section {
+  margin-top: 20px;
+}
+
+.rooms-section h3 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.room-card {
+  background-color: #1e293b;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.room-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.admin-badge {
+  background-color: #475569;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
