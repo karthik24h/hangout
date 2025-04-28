@@ -291,3 +291,62 @@ body {
   background: rgba(0, 0, 0, 0.7); /* Darker background for the overlay */
 }
 
+/*profile icon*/
+.profile-container {
+  position: relative;
+}
+
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.profile-popup {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 200px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  z-index: 10;
+}
+
+.profile-info {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.profile-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-actions button {
+  padding: 8px;
+  font-size: 14px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.profile-actions button:hover {
+  background-color: #e0e0e0;
+}
