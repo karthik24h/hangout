@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import CreateRoomModal from './CreateRoomModal'; 
+import JoinRoomModal from './JoinRoomModal'; // Import the JoinRoomModal
 import './App.css';
 
 export default function HomePage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false); // Add join modal state
+
+  const openCreateModal = () => setIsCreateModalOpen(true);
+  const closeCreateModal = () => setIsCreateModalOpen(false);
+
+  const openJoinModal = () => setIsJoinModalOpen(true);
+  const closeJoinModal = () => setIsJoinModalOpen(false);
+
   return (
     <div className="homepage">
       <Header />
@@ -13,8 +24,12 @@ export default function HomePage() {
         <h2>Welcome to Hangout</h2>
         <p>Create or join a room to watch videos and listen to music together.</p>
         <div className="welcome-buttons">
-          <button className="new-room-btn">New Room</button>
-          <button className="join-room-btn">Join Room</button>
+          <button className="new-room-btn" onClick={openCreateModal}>
+            New Room
+          </button>
+          <button className="join-room-btn" onClick={openJoinModal}>
+            Join Room
+          </button>
         </div>
       </section>
 
@@ -34,6 +49,7 @@ export default function HomePage() {
       {/* Rooms Section */}
       <section className="rooms-section">
         <h3>Rooms</h3>
+
         <div className="room-card">
           <div className="room-header">
             <span className="admin-badge">Admin</span>
@@ -52,6 +68,10 @@ export default function HomePage() {
           <p>3 participants</p>
         </div>
       </section>
+
+      {/* Modals */}
+      {isCreateModalOpen && <CreateRoomModal onClose={closeCreateModal} />}
+      {isJoinModalOpen && <JoinRoomModal onClose={closeJoinModal} />}
     </div>
   );
 }
