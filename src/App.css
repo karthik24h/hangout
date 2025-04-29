@@ -350,3 +350,146 @@ body {
 .profile-actions button:hover {
   background-color: #e0e0e0;
 }
+
+/* login and signup */
+/* src/pages/Auth.css */
+.auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-form {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.auth-form input {
+  margin-bottom: 15px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.auth-form button {
+  padding: 12px;
+  background-color: #667eea;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-form button:hover {
+  background-color: #5a67d8;
+}
+/* logout */
+.logout-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.logout-confirm-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(62, 130, 255, 0.3);
+  animation: glow 1.5s ease-in-out infinite alternate;
+  max-width: 400px;
+  width: 90%;
+}
+
+.logout-confirm-modal h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.logout-confirm-modal p {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+}
+
+.logout-confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.logout-confirm-buttons button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn {
+  background-color: #3e82ff;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #2b6df2;
+  box-shadow: 0 0 10px rgba(62, 130, 255, 0.4);
+}
+
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #e4e4e4;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(62, 130, 255, 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(62, 130, 255, 0.5);
+  }
+}
+.auth-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.auth-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.auth-link a:hover {
+  color: #5a67d8;
+}
