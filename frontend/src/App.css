@@ -493,3 +493,15 @@ body {
 .auth-link a:hover {
   color: #5a67d8;
 }
+/* profile avatar header */
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}

@@ -16,6 +16,7 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
+        localStorage.setItem('isAuthenticated', 'true'); // ✅ Save login state
         alert('Login successful!');
         navigate('/');
       } else {

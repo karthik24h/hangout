@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './App.css';
-import CreateRoomModal from './CreateRoomModal'; // Already mentioned
+import CreateRoomModal from './CreateRoomModal';
 
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // You can replace this with user-specific info like email or ID
+    const seed = Math.random().toString(36).substring(2, 15);
+    const avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+    setAvatarUrl(avatar);
+  }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const closeProfile = () => setIsProfileOpen(false);
 
@@ -21,9 +28,8 @@ export default function Header() {
   };
 
   const confirmLogout = () => {
-    // Add your logout logic here
     setShowLogoutConfirm(false);
-    navigate('/login'); // Redirect to login page
+    navigate('/login');
   };
 
   const cancelLogout = () => {
@@ -36,7 +42,7 @@ export default function Header() {
         <h1 className="logo">Hangout</h1>
         <div className="header-buttons">
           <Link to="/search">
-            {/* You can add search button later */}
+            {/* Optional search icon */}
           </Link>
 
           <button className="create-room-btn" onClick={openModal}>
@@ -44,12 +50,17 @@ export default function Header() {
           </button>
 
           <div className="profile-container">
-            <div className="profile-icon" onClick={toggleProfile}>👤</div>
+            <img
+              src={avatarUrl}
+              alt="User Avatar"
+              className="profile-avatar"
+              onClick={toggleProfile}
+            />
 
             {isProfileOpen && (
               <div className="profile-popup">
                 <div className="profile-info">
-                  <h3>John Doe</h3> {/* You can dynamically set this */}
+                  <h3>John Doe</h3>
                   <p>john@example.com</p>
                 </div>
                 <div className="profile-actions">
