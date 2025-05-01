@@ -6,7 +6,8 @@ import VideosPage from './VideosPage';
 import FavoritesPage from './FavoritesPage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import PrivateRoute from './PrivateRoute'; // ✅ Import your PrivateRoute
+import PrivateRoute from './PrivateRoute'; 
+import SettingsPage from './SettingsPage';
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
         />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </Router>
   );

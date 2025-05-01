@@ -64,7 +64,10 @@ export default function Header() {
                   <p>john@example.com</p>
                 </div>
                 <div className="profile-actions">
-                  <button onClick={closeProfile}>Settings</button>
+                <Link to="/settings" className="settings-button-link" onClick={closeProfile}>
+  Settings
+</Link>
+
                   <button onClick={handleLogout}>Logout</button>
                 </div>
               </div>
