@@ -1,9 +1,9 @@
-// backend/server.js
-
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+
 const app = express();
 const PORT = 5000;
 
@@ -20,7 +20,12 @@ const pool = new Pool({
   port: 5432,
 });
 
-// Routes
+// Helper: Generate a random 6-character alphanumeric room code
+function generateRoomCode() {
+  return Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+// ===== Routes =====
 
 // Root route
 app.get('/', (req, res) => {
@@ -57,7 +62,6 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Check if user exists
     const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (user.rows.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
@@ -76,7 +80,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Direct Password Reset Route (no token, just email + new & confirm password)
+// Reset Password
 app.post('/api/reset-password', async (req, res) => {
   const { email, newPassword, confirmPassword } = req.body;
   try {
@@ -104,7 +108,36 @@ app.post('/api/reset-password', async (req, res) => {
   }
 });
 
-// Server Listen
+// Create Room
+app.post('/api/rooms/create', async (req, res) => {
+  const roomCode = generateRoomCode();
+  const { name } = req.body;
+  try {
+    await pool.query('INSERT INTO rooms (room_code, name) VALUES ($1, $2)', [roomCode, name || 'Unnamed Room']);
+    res.json({ roomCode });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating room' });
+  }
+});
+
+// Join Room
+app.get('/api/rooms/join/:code', async (req, res) => {
+  const code = req.params.code;
+  try {
+    const result = await pool.query('SELECT * FROM rooms WHERE room_code = $1', [code]);
+    if (result.rows.length > 0) {
+      res.json({ room: result.rows[0] });
+    } else {
+      res.status(404).json({ error: 'Room not found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error joining room' });
+  }
+});
+
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

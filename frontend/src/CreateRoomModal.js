@@ -1,19 +1,76 @@
-import React from 'react';
-import './App.css'; // We will create this CSS
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './App.css'; // Ensure this contains modal styles
 
 export default function CreateRoomModal({ onClose }) {
+  const [roomName, setRoomName] = useState('');
+  const [setPassword, setSetPassword] = useState(false);
+  const [password, setPasswordValue] = useState('');
+  const navigate = useNavigate();
+
+  const handleCreateRoom = async () => {
+    const body = { name: roomName };
+    if (setPassword && password) {
+      body.password = password; // Optionally add password support to backend
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/rooms/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+      if (data.roomCode) {
+        onClose();
+        navigate(`/videos?room=${data.roomCode}`);
+      } else {
+        alert(data.error || 'Room creation failed');
+      }
+    } catch (error) {
+      console.error('Error creating room:', error);
+      alert('Server error');
+    }
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <button className="close-button" onClick={onClose}>×</button>
         <h2 className="modal-title">Create Room</h2>
-        <input className="modal-input" type="text" placeholder="Room Name" />
-        <input className="modal-input" type="password" placeholder="Password (optional)" />
+        
+        <input
+          className="modal-input"
+          type="text"
+          placeholder="Room Name"
+          value={roomName}
+          onChange={e => setRoomName(e.target.value)}
+        />
+
         <div className="modal-checkbox">
-          <input type="checkbox" id="setPassword" />
+          <input
+            type="checkbox"
+            id="setPassword"
+            checked={setPassword}
+            onChange={e => setSetPassword(e.target.checked)}
+          />
           <label htmlFor="setPassword">Set a password</label>
         </div>
-        <button className="modal-create-button">Create Room</button>
+
+        {setPassword && (
+          <input
+            className="modal-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPasswordValue(e.target.value)}
+          />
+        )}
+
+        <button className="modal-create-button" onClick={handleCreateRoom}>
+          Create Room
+        </button>
       </div>
     </div>
   );
