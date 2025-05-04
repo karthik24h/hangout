@@ -604,3 +604,246 @@ body {
 .settings-button-link:hover {
   background-color: #0056b3;
 }
+
+/* chatting and video */
+/* Container for the whole page */
+.videos-page-container {
+  padding-bottom: 3rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Room Code Display */
+.room-header {
+  padding: 1rem;
+}
+
+.room-code-display {
+  min-width: 180px;
+  text-align: center;
+}
+
+/* Video and Chat Section */
+.video-chat-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  background-color: #1f2937; /* Tailwind's gray-800 */
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+/* Video Player Styling */
+.video-section video {
+  width: 100%;
+  border-radius: 0.75rem;
+  background-color: black;
+}
+
+/* Chat Panel Styling */
+.chat-section {
+  display: flex;
+  flex-direction: column;
+  background-color: #111827; /* Tailwind's gray-900 */
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: white;
+}
+
+/* Chat Messages Area */
+.chat-messages {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  height: 300px;
+  overflow-y: auto;
+}
+
+/* Chat Input Box */
+.chat-input input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #374151; /* Tailwind's gray-700 */
+  border: none;
+  color: white;
+}
+
+.chat-input input::placeholder {
+  color: #9ca3af; /* Tailwind's gray-400 */
+}
+
+.chat-input input:focus {
+  outline: 2px solid #2563eb; /* Tailwind's blue-600 */
+}
+/* header roomid  */
+/* Header Container */
+/* .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;                               //new header section
+  padding: 10px 20px;
+  background-color: #2d2d2d;
+  color: white;
+} */
+
+.header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* .header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;                           //new header section
+} */
+
+.room-code-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #333;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.room-id {
+  font-size: 1rem;
+  color: white;
+}
+
+.room-id span {
+  font-weight: 600;
+  color: #1e90ff;
+}
+
+.copy-room-btn,
+.close-room-btn,
+.leave-room-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.copy-room-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.copy-room-btn:hover {
+  background-color: #45a049;
+}
+
+.close-room-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.close-room-btn:hover {
+  background-color: #e53935;
+}
+
+.leave-room-btn {
+  background-color: #757575;
+  color: white;
+  border: none;
+}
+
+.leave-room-btn:hover {
+  background-color: #616161;
+}
+
+.profile-container {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+.profile-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #333;
+  padding: 12px;
+  border-radius: 8px;
+  width: 200px;
+  z-index: 10;
+}
+
+.profile-info {
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+
+.settings-button-link {
+  display: block;
+  padding: 4px 0;
+  color: #1e90ff;
+}
+
+.settings-button-link:hover {
+  text-decoration: underline;
+}
+
+.logout-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logout-confirm-modal {
+  background: #333;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.logout-confirm-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.confirm-btn,
+.cancel-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #45a049;
+}
+
+.cancel-btn:hover {
+  background-color: #e53935;
+}

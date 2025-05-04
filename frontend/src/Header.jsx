@@ -14,7 +14,6 @@ export default function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // You can replace this with user-specific info like email or ID
     const seed = Math.random().toString(36).substring(2, 15);
     setAvatarUrl(`https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`);
 
@@ -81,13 +80,21 @@ export default function Header() {
         <h1 className="logo">Hangout</h1>
         <div className="header-buttons">
           {isRoomPage && roomCode ? (
-            <div className="room-code-info">
-              {/* <p className="room-code">Room: <strong>{roomCode}</strong></p> */}
-              {/* <button className="copy-room-btn" onClick={handleCopyRoom}>Copy Code</button> */}
+            <div className="room-code-info flex items-center gap-4">
+              <div className="room-id text-lg text-white">
+                <span>Room ID: </span><span className="text-blue-400 font-semibold">{roomCode}</span>
+              </div>
+              <button className="copy-room-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCopyRoom}>
+                Copy Code
+              </button>
               {isCreator ? (
-                <button className="close-room-btn" onClick={handleCloseRoom}>Close Room</button>
+                <button className="close-room-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCloseRoom}>
+                  Close Room
+                </button>
               ) : (
-                <button className="leave-room-btn" onClick={handleLeaveRoom}>Leave Room</button>
+                <button className="leave-room-btn bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleLeaveRoom}>
+                  Leave Room
+                </button>
               )}
             </div>
           ) : (
