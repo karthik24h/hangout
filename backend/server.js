@@ -137,6 +137,19 @@ app.get('/api/rooms/join/:code', async (req, res) => {
   }
 });
 
+// Close Room
+app.delete('/api/rooms/close/:roomCode', async (req, res) => {
+  const { roomCode } = req.params;
+
+  try {
+    await pool.query('DELETE FROM rooms WHERE room_code = $1', [roomCode]);
+    return res.json({ message: 'Room closed successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to close room' });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
