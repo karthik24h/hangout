@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css'; // Ensure this contains your modal styles
+import './App.css'; // or './Modal.css' if you're using that
 
 export default function CreateRoomModal({ onClose }) {
   const [roomName, setRoomName] = useState('');
   const [setPassword, setSetPassword] = useState(false);
   const [password, setPasswordValue] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
-    const body = { name: roomName };
+    if (!roomName.trim()) {
+      setError('Room name is required.');
+      return;
+    }
+
+    const body = { name: roomName.trim() };
     if (setPassword && password) {
-      body.password = password; // Optionally add password to backend
+      body.password = password;
     }
 
     try {
@@ -22,18 +28,16 @@ export default function CreateRoomModal({ onClose }) {
       });
 
       const data = await response.json();
-      if (data.roomCode) {
-        // Save the room code in localStorage to track the creator
+      if (response.ok && data.roomCode) {
         localStorage.setItem('createdRoom', data.roomCode);
-
-        onClose(); // Close modal
-        navigate(`/videos?room=${data.roomCode}`); // Navigate to videos page with room
+        onClose();
+        navigate(`/videos?room=${data.roomCode}`);
       } else {
-        alert(data.error || 'Room creation failed');
+        setError(data.message || data.error || 'Failed to create room.');
       }
     } catch (error) {
       console.error('Error creating room:', error);
-      alert('Server error');
+      setError('Server error while creating room.');
     }
   };
 
@@ -48,8 +52,13 @@ export default function CreateRoomModal({ onClose }) {
           type="text"
           placeholder="Room Name"
           value={roomName}
-          onChange={e => setRoomName(e.target.value)}
+          onChange={(e) => {
+            setRoomName(e.target.value);
+            setError('');
+          }}
         />
+
+        {error && <p className="error-text">{error}</p>}
 
         <div className="modal-checkbox">
           <input
