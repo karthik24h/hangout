@@ -1034,3 +1034,17 @@ body {
 .music-player-chat-input::placeholder {
   color: #94a3b8;
 }
+/* video media  */
+.video-section button {
+  margin-top: 0.5rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.video-section button:hover {
+  background-color: #1d4ed8;
+}

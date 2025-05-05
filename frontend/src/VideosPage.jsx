@@ -24,6 +24,9 @@ export default function VideosPage() {
             </video>
           </div>
           <div className="mt-2 text-sm text-gray-300">0:23 / 3:45</div>
+          <button className="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+            Add Media
+          </button>
         </div>
 
         {/* Right: Chat Section */}
