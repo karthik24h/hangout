@@ -5,8 +5,9 @@ import './App.css';
 
 export default function VideosPage() {
   const location = useLocation();
+  // eslint-disable-next-line no-unused-vars
   const params = new URLSearchParams(location.search);
-  const roomCode = params.get('room');
+  // const roomCode = params.get('room');
 
   return (
     <div className="videos-page-container min-h-screen bg-gray-900 text-white">
