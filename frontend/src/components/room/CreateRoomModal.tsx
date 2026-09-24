@@ -1,14 +1,15 @@
 import { apiFetch } from '../../services/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/App.css'; // Make sure the CSS file is linked properly
+import '../../styles/App.css';
 
 export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
   const [roomName, setRoomName] = useState('');
   const [setPassword, setSetPassword] = useState(false);
   const [password, setPasswordValue] = useState('');
   const [error, setError] = useState('');
-  const [mediaType, setMediaType] = useState('video'); // Added state for media type
+  const [mediaType, setMediaType] = useState<'video' | 'music'>('video');
+  const [privacy, setPrivacy] = useState<'public' | 'private' | 'invite_only'>('public');
   const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
@@ -17,7 +18,11 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const body: { name: string; password?: string } = { name: roomName.trim() };
+    const body: { name: string; type: 'video' | 'music'; password?: string; privacy: 'public' | 'private' | 'invite_only' } = {
+      name: roomName.trim(),
+      type: mediaType,
+      privacy,
+    };
     if (setPassword && password) {
       body.password = password;
     }
@@ -25,22 +30,20 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
     try {
       const response = await apiFetch('/rooms/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
 
       const data = await response.json();
-      if (response.ok && data.roomCode) {
-        localStorage.setItem('createdRoom', data.roomCode);
+      if (response.ok && data.room) {
+        localStorage.setItem('createdRoom', data.room.room_code);
         onClose();
-        // Redirect based on the media type selected
         if (mediaType === 'music') {
-          navigate(`/music?room=${data.roomCode}`);
+          navigate(`/music?room=${data.room.room_code}`);
         } else {
-          navigate(`/videos?room=${data.roomCode}`);
+          navigate(`/videos?room=${data.room.room_code}`);
         }
       } else {
-        setError(data.message || data.error || 'Failed to create room.');
+        setError(data.error || 'Failed to create room.');
       }
     } catch (error) {
       console.error('Error creating room:', error);
@@ -74,7 +77,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
             checked={setPassword}
             onChange={(e) => setSetPassword(e.target.checked)}
           />
-          <label htmlFor="setPassword">Set a password</label>
+          <label htmlFor="setPassword">Set a password (makes room private)</label>
         </div>
 
         {setPassword && (
@@ -87,17 +90,30 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
           />
         )}
 
-        {/* Media Type Dropdown */}
         <div className="media-type-dropdown">
           <label htmlFor="mediaType">Select Media Type</label>
           <select
             id="mediaType"
             value={mediaType}
-            onChange={(e) => setMediaType(e.target.value)}
+            onChange={(e) => setMediaType(e.target.value as 'video' | 'music')}
             className="media-type-dropdown-select"
           >
             <option value="video">Video</option>
             <option value="music">Music</option>
+          </select>
+        </div>
+
+        <div className="media-type-dropdown">
+          <label htmlFor="privacy">Privacy</label>
+          <select
+            id="privacy"
+            value={privacy}
+            onChange={(e) => setPrivacy(e.target.value as 'public' | 'private' | 'invite_only')}
+            className="media-type-dropdown-select"
+          >
+            <option value="public">Public</option>
+            <option value="private">Private (password required)</option>
+            <option value="invite_only">Invite Only</option>
           </select>
         </div>
 

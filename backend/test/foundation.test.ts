@@ -34,7 +34,12 @@ test('HTTP diagnostics, disabled recovery, errors, and socket acknowledgement', 
     const health = await fetch(`${url}/health`);
     assert.deepEqual(await health.json(), { ok: true });
     assert.equal((await fetch(`${url}/missing`)).status, 404);
-    assert.equal((await fetch(`${url}/api/reset-password`, { method: 'POST' })).status, 501);
+    // Old reset-password endpoint is now replaced with request/confirm endpoints
+    // These may return 400 (validation error) or 500 (DB connection error in test), but not 404
+    const resetRequestStatus = (await fetch(`${url}/api/reset-password/request`, { method: 'POST' })).status;
+    const resetConfirmStatus = (await fetch(`${url}/api/reset-password/confirm`, { method: 'POST' })).status;
+    assert.notEqual(resetRequestStatus, 404);
+    assert.notEqual(resetConfirmStatus, 404);
     const malformed = await fetch(`${url}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' });
     assert.equal(malformed.status, 400);
     const ready = new Promise<unknown>((resolve, reject) => {

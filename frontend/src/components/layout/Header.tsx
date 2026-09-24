@@ -1,7 +1,8 @@
 import { useConnectionStatus } from '../../hooks/useConnectionStatus';
-import { apiFetch } from '../../services/api';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { apiFetch } from '../../services/api';
 import '../../styles/App.css';
 import CreateRoomModal from '../room/CreateRoomModal';
 
@@ -13,8 +14,10 @@ export default function Header() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
+  const [checkingCreator, setCheckingCreator] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const seed = Math.random().toString(36).substring(2, 15);
@@ -23,8 +26,27 @@ export default function Header() {
     const params = new URLSearchParams(location.search);
     const code = params.get('room');
     setRoomCode(code);
-    setIsCreator(Boolean(code && localStorage.getItem('createdRoom') === code));
+    setIsCreator(false);
+    
+    if (code) {
+      checkCreator(code);
+    }
   }, [location.search]);
+
+  const checkCreator = async (code: string) => {
+    setCheckingCreator(true);
+    try {
+      const response = await apiFetch(`/rooms/${code}`);
+      if (response.ok) {
+        const data = await response.json();
+        setIsCreator(data.room?.host_id === user?.id);
+      }
+    } catch (error) {
+      console.error('Error checking room creator:', error);
+    } finally {
+      setCheckingCreator(false);
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -36,10 +58,9 @@ export default function Header() {
     closeProfile();
   };
 
-  const confirmLogout = () => {
+  const confirmLogout = async () => {
     setShowLogoutConfirm(false);
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('createdRoom');
+    await logout();
     navigate('/login');
   };
 
@@ -64,11 +85,10 @@ export default function Header() {
     if (!confirm) return;
 
     try {
-      const response = await apiFetch(`/rooms/close/${roomCode}`, {
+      const response = await apiFetch(`/rooms/${roomCode}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Room closure failed');
-      localStorage.removeItem('createdRoom');
       navigate('/');
     } catch (error) {
       console.error('Error closing room:', error);
@@ -92,7 +112,9 @@ export default function Header() {
               <button className="copy-room-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCopyRoom}>
                 Copy Code
               </button>
-              {isCreator ? (
+              {checkingCreator ? (
+                <span>Loading...</span>
+              ) : isCreator ? (
                 <button className="close-room-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCloseRoom}>
                   Close Room
                 </button>
@@ -114,8 +136,8 @@ export default function Header() {
             {isProfileOpen && (
               <div className="profile-popup">
                 <div className="profile-info">
-                  <h3>John Doe</h3>
-                  <p>john@example.com</p>
+                  <h3>{user?.name || 'User'}</h3>
+                  <p>{user?.email || ''}</p>
                 </div>
                 <div className="profile-actions">
                   <Link to="/settings" className="settings-button-link" onClick={closeProfile}>
