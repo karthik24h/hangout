@@ -33,9 +33,7 @@ test('HTTP diagnostics, disabled recovery, errors, and socket acknowledgement', 
   try {
     const health = await fetch(`${url}/health`);
     assert.deepEqual(await health.json(), { ok: true });
-    const missingRes = await fetch(`${url}/missing`, { credentials: 'omit' });
-    console.log('Missing response status:', missingRes.status);
-    assert.equal(missingRes.status, 404);
+    assert.equal((await fetch(`${url}/missing`)).status, 404);
     assert.equal((await fetch(`${url}/api/reset-password`, { method: 'POST' })).status, 501);
     const malformed = await fetch(`${url}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' });
     assert.equal(malformed.status, 400);

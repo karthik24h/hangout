@@ -13,7 +13,6 @@ declare global {
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.hangout_session;
-  console.log('Auth middleware - path:', req.path, 'token:', token);
   
   if (!token) {
     return next();

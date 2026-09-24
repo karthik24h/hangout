@@ -162,7 +162,7 @@ router.get('/api/rooms/:roomCode', requireAuth, async (req, res) => {
 });
 
 // Leave Room
-router.post('/api/rooms/:roomCode/leave', async (req, res) => {
+router.post('/api/rooms/:roomCode/leave', requireAuth, async (req, res) => {
   const code = req.params.roomCode;
 
   try {
@@ -186,7 +186,7 @@ router.post('/api/rooms/:roomCode/leave', async (req, res) => {
 });
 
 // Close Room (host only)
-router.delete('/api/rooms/:roomCode', async (req, res) => {
+router.delete('/api/rooms/:roomCode', requireAuth, async (req, res) => {
   const code = req.params.roomCode;
 
   try {
@@ -218,7 +218,7 @@ router.delete('/api/rooms/:roomCode', async (req, res) => {
 });
 
 // Remove member (host only)
-router.delete('/api/rooms/:roomCode/members/:userId', async (req, res) => {
+router.delete('/api/rooms/:roomCode/members/:userId', requireAuth, async (req, res) => {
   const code = req.params.roomCode;
   const targetUserId = parseInt(req.params.userId, 10);
 

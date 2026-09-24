@@ -16,7 +16,7 @@ export function createApp() {
   app.get('/health', (_req, res) => { res.json({ ok: true }); });
   app.use(auth);
   app.use(rooms);
-  app.use((req, res) => { console.log('404 handler for:', req.path); res.status(404).json({ message: 'Not found' }); });
+  app.use((_req, res) => { res.status(404).json({ message: 'Not found' }); });
   const errors: ErrorRequestHandler = (error, _req, res, _next) => {
     const status = error?.status === 400 ? 400 : error?.status === 413 ? 413 : 500;
     res.status(status).json({ message: status === 400 ? 'Invalid JSON' : status === 413 ? 'Request too large' : 'Server error' });
