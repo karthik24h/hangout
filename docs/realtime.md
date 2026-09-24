@@ -36,3 +36,7 @@ Additional event families may include ephemeral player reactions, polls/results,
 Add playback rate to authoritative state; elapsed playing time must account for that rate. Chapters and timestamp notes/moments reuse authorized seek commands. Expose measured round-trip latency and drift rather than invented quality scores; calibrate labels and test reconnect behavior. A connection indicator does not establish database or media health.
 
 Voice requires its own evaluated transport and microphone lifecycle. Socket.IO may coordinate authorized signaling, but is not a substitute for an audio transport. Host mute must not enable another user's microphone. Rate-limit reaction bursts and typing; define one-account vote eligibility and disconnect handling before queue/poll voting.
+
+## Privileged operations events — planned
+
+Console metrics, reports, restriction updates, and maintenance broadcasts require separate authorized subscriptions and payload scopes; the current diagnostic socket exposes none of them. Check platform permissions independently of room roles. Revocations/bans must affect active connections and commands. See [console acceptance checks](admin-console.md) for required isolation and role-change tests.

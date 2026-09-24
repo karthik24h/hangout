@@ -53,3 +53,7 @@ Inspect and back up the real database first. Create a versioned baseline compati
 | privacy_preferences / optional_ai_jobs | Consent, history visibility, processing state, retention, and deletion |
 
 These are design candidates, not final table definitions. Integrate with existing planned entities instead of duplicating them. Choose foreign keys, visibility, retention, and account-deletion behavior before migration. Keep transient reactions/voice presence ephemeral unless a defined feature requires retained aggregates. Never persist raw microphone streams by default.
+
+## Operations data — proposed only
+
+The [console plan](admin-console.md) adds platform roles/permissions and assignments, privileged sessions/MFA, reports and evidence references, restrictions/appeals, append-only audit events, settings revisions, announcement jobs, security events, flag revisions, maintenance state, and backup-job metadata. Reuse existing planned sessions/notifications/bans where appropriate. Enforce last-super-admin and target-role rules transactionally. Define redaction, private-evidence access, retention, and deletion before migration. No console schema has been applied.

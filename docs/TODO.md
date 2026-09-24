@@ -146,3 +146,31 @@ See [feature scope and acceptance requirements](features.md). These items extend
 - [ ] F28: Optional AI assistance.
 - [ ] F29: Privacy controls.
 - [ ] F30: Recovery and error UX.
+
+## Platform operations console
+
+See [console scope, route choice, permissions, and acceptance checks](admin-console.md). All items below are planned. Use `/ops/lantern-7c42`, with no `/admin` alias; server authorization is mandatory regardless of the URL.
+
+- [ ] Implement privileged session/MFA/bootstrap and permission prerequisites before console access.
+- [ ] A01: Dashboard.
+- [ ] A02: User management.
+- [ ] A03: Roles and permissions.
+- [ ] A04: Room management.
+- [ ] A05: Reports.
+- [ ] A06: Chat moderation.
+- [ ] A07: Bans and restrictions.
+- [ ] A08: Media management.
+- [ ] A09: Announcements and notifications.
+- [ ] A10: Analytics.
+- [ ] A11: Audit logs.
+- [ ] A12: System health.
+- [ ] A13: Platform settings.
+- [ ] A14: Security center.
+- [ ] A15: Administrator management.
+- [ ] A16: Separate admin authentication.
+- [ ] A17: Maintenance mode.
+- [ ] A18: Backup and database operations.
+- [ ] A19: Feature flags.
+- [ ] A20: Console shell and admin profile.
+- [ ] V3: Optional automated/AI moderation assistance, advanced security/analytics, cost reporting, backup orchestration, and feature experimentation.
+- [ ] Pass direct API/socket denial, role escalation, revocation, MFA, audit, maintenance, and concurrency acceptance tests.

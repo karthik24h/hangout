@@ -11,6 +11,7 @@ Hangout is a work-in-progress app for private watch and music parties. Friends w
 - [Architecture and folder structure](docs/architecture.md)
 - [Checked implementation roadmap](docs/TODO.md)
 - [Expanded feature roadmap — 30 planned experiences](docs/features.md)
+- [Platform operations console — permissions, nonstandard route, and 20 planned areas](docs/admin-console.md)
 - [HTTP API](docs/api.md)
 - [Database design](docs/database.md)
 - [Real-time events and synchronization](docs/realtime.md)
@@ -137,3 +138,7 @@ Technical references: [Vite environment configuration](https://vite.dev/guide/en
 ## Expanded product scope
 
 The [expanded roadmap](docs/features.md) adds cinematic rooms, floating reactions, voice, advanced chat, collaborative queue voting, polls, richer invites, privacy/guest roles, mobile and device handoff, scheduling/recurrence, themes, diagnostics, chapters, notes, saved moments, memories, and optional analytics/AI. These are planned features with unchecked tasks, not claims of current functionality. Secure membership and the authoritative real-time room engine come first.
+
+## Planned operations console
+
+The [console plan](docs/admin-console.md) covers management, moderation, reports, audit, health, security, settings, and phased operational tools. Its proposed entry is `/ops/lantern-7c42/login`, with no `/admin` alias. This route is not implemented and is not a security boundary: privileged server sessions, MFA, and API/socket permissions must come first. All console work is unchecked in the roadmap.

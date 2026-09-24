@@ -36,3 +36,7 @@ Use a consistent public room identifier, pagination, stable error codes, and ser
 Future service-backed routes will cover invite creation/redemption/revocation, join approvals/bans, room policy and roles, chat reactions/pins/search, polls/votes, saved queues, scheduled/recurring rooms, reminders, own-device handoff, private history/progress, chapters/notes/moments, memories, privacy preferences, and authorized diagnostics/analytics. Optional voice access and AI jobs require separate contracts and provider decisions.
 
 Define exact methods/payloads alongside implementation. Apply server authorization to every read/write, use pagination for lists, and use atomic/idempotent operations for single-use invite redemption, votes, reminders, and device handoff. Search must filter inaccessible rooms and private history. Guest access needs explicit limited identity and permissions.
+
+## Operations endpoints — proposed only
+
+The [console plan](admin-console.md) proposes `/api/ops/lantern-7c42` for privileged authentication, users, roles, rooms, reports, moderation, restrictions, media, announcements, analytics, audit, health, settings, security, administrator management, maintenance, backup jobs, and flags. There is no `/admin` alias and no implemented console endpoint. All reads/writes require explicit server permissions; bulk/destructive actions require step-up/confirmation and durable audit. Never expose arbitrary database queries or shell commands.

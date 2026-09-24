@@ -83,3 +83,7 @@ See [the full feature catalog](features.md) and [tracking checklist](TODO.md). B
 Extend modules only as features ship: invitations/polls, scheduling/reminders, activity/history, notes/moments, notification delivery, device sessions, and privacy preferences. Scheduled and recurring rooms require a durable worker with time-zone-aware occurrences and idempotent jobs. Voice requires a separately evaluated audio transport/provider (for example, a WebRTC-based design); the current Socket.IO connection layer is not voice streaming.
 
 Device handoff is account-scoped and must define control ownership. Aggregate analytics and optional AI must respect room access, retention, and user privacy. No AI or voice provider has been selected or integrated. Keep watch history private by default. Synchronization is a measured tolerance with recovery behavior, not a promise of perfect playback alignment.
+
+## Platform operations boundary — planned
+
+See [admin-console.md](admin-console.md). Add a separate console shell under `/ops/lantern-7c42` and privileged backend namespace with independent session/permission middleware. Platform roles are distinct from room roles; neither route obscurity nor localStorage authenticates an operator. Shared services enforce policy, transactional audit, and revocation for HTTP and sockets. Secure bootstrap/MFA and denied-access tests precede console rollout.

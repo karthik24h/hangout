@@ -29,3 +29,7 @@ See [features F01–F30](features.md). Add theater/PiP controls with support-awa
 Plan invitation previews/QR, approval and permission dialogs, scheduling with explicit time zones, recurrence editing, device continuation, notification center, dashboard/search, chapters, notes, moments, and session memories. Distinguish public room metadata from information visible only to members.
 
 Themes include dark/midnight/AMOLED/light and accents after contrast checks. Motion covers messages, presence, reactions, queue reorder, and media transitions with reduced-motion alternatives. Diagnostics must show measured values, unavailable states, and honest persistence/recovery feedback. Provide private-history defaults, explicit voice/AI opt-in, and drafts/unsaved-change handling.
+
+## Operations console UI — planned
+
+Use a separate [console shell](admin-console.md) with sidebar, admin profile/logout, permission-filtered sections, paginated/filterable tables, explicit action reasons, preview/confirmation dialogs, and measured dashboard states. Console login must support MFA, recovery, timeout, and denied-access screens. No ordinary-user admin link or `/admin` alias; the nonstandard route is discoverable and cannot replace server security.

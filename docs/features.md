@@ -200,3 +200,7 @@ Overlapping features extend the existing roadmap; they are not separate implemen
 ## Shared completion gate
 
 A feature is complete only when its relevant UI, persistence, server authorization, runtime validation, error/reconnect behavior, accessibility, and tests are implemented. Verify room isolation with separate accounts. Update schema/API/socket contracts with code. Browser-dependent functions must show a usable fallback. Record test evidence before checking a feature off.
+
+## Platform administration companion
+
+The [operations console plan](admin-console.md) adds 20 management/security areas, separate platform permissions, and a nonstandard console route. Track A01–A20 alongside the experience features in [TODO.md](TODO.md). Console authentication and backend authorization must be implemented before privileged UI becomes available.
