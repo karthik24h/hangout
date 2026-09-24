@@ -10,7 +10,6 @@ export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState('');
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
   const [checkingCreator, setCheckingCreator] = useState(false);
@@ -40,11 +39,6 @@ export default function Header() {
   );
 
   useEffect(() => {
-    const seed = Math.random().toString(36).substring(2, 15);
-    // Initial avatar generation - setState in effect is intentional for initial load
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAvatarUrl(`https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`);
-
     const params = new URLSearchParams(location.search);
     const code = params.get('room');
     // Initial room code state - setState in effect is intentional for initial load
@@ -114,9 +108,9 @@ export default function Header() {
 
   const isRoomPage = location.pathname === '/videos' || location.pathname === '/music';
   const statusClass =
-    connectionStatus === 'connected'
+    connectionStatus.toLowerCase() === 'connected'
       ? 'connected'
-      : connectionStatus === 'connecting'
+      : connectionStatus.toLowerCase() === 'connecting'
         ? 'connecting'
         : 'disconnected';
 
@@ -160,7 +154,16 @@ export default function Header() {
           )}
 
           <div className="profile-container">
-            <img src={avatarUrl} alt="User Avatar" className="avatar" onClick={toggleProfile} />
+            <button
+              type="button"
+              className="header-profile-button"
+              onClick={toggleProfile}
+              aria-label="Account menu"
+              aria-expanded={isProfileOpen}
+              aria-haspopup="menu"
+            >
+              {user?.name?.trim().slice(0, 2).toUpperCase() || 'H'}
+            </button>
 
             {isProfileOpen && (
               <div className="dropdown-menu" role="menu">
@@ -185,21 +188,21 @@ export default function Header() {
           </div>
 
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
               {theme === 'light' ? (
-                <path d="M12 2a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zm5.66 2.34a1 1 0 011.41 0l1.42 1.42a1 1 0 01-1.41 1.41L18.66 5.75a1 1 0 010-1.41zM21 7a2 2 0 01-2 2H5a2 2 0 01-2-2V2a2 2 0 012-2h14a2 2 0 012 2v3zm0 4a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v3zM7.25 10.75a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm0 4a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm6.5-8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm0 8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm3.75-8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5z" />
+                <path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" />
               ) : (
-                <g>
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </g>
+                <>
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+                </>
               )}
             </svg>
           </button>

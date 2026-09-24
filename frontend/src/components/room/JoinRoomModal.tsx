@@ -126,7 +126,7 @@ export default function JoinRoomModal({ onClose }: { onClose: () => void }) {
               <button type="button" className="btn btn-secondary" onClick={onClose}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary" onClick={handleJoinRoom}>
+              <button type="submit" className="btn btn-primary">
                 Join Room
               </button>
             </div>

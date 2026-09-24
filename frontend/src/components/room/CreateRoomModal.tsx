@@ -188,7 +188,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
               <button type="button" className="btn btn-secondary" onClick={onClose}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary" onClick={handleCreateRoom}>
+              <button type="submit" className="btn btn-primary">
                 Create Room
               </button>
             </div>

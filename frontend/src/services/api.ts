@@ -11,13 +11,24 @@ export interface AuthResponse {
 }
 
 export async function apiFetch(path: string, options?: RequestInit): Promise<Response> {
+  const headers = new Headers(options?.headers);
+  if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  if (
+    path.startsWith('/rooms') &&
+    !['GET', 'HEAD'].includes((options?.method || 'GET').toUpperCase())
+  ) {
+    const csrfResponse = await fetch(`${apiUrl}/csrf-token`, { credentials: 'include' });
+    if (!csrfResponse.ok)
+      throw new Error('Your session could not be verified. Please log in again.');
+    const { csrfToken } = await csrfResponse.json();
+    if (typeof csrfToken !== 'string' || !csrfToken)
+      throw new Error('Unable to verify your session.');
+    headers.set('X-CSRF-Token', csrfToken);
+  }
   return fetch(`${apiUrl}${path}`, {
     ...options,
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
+    headers,
   });
 }
 
