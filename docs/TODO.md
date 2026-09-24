@@ -111,3 +111,38 @@ Reviewed 2026-09-24. `[x]` means implemented; `[ ]` means missing or unfinished.
 - [ ] Shared Socket.IO coordination before multi-instance deployment.
 
 Update these boxes and relevant API/schema/event docs in the same change as implementation. Do not mark broad features complete until persistence, authorization, UI behavior, and applicable tests exist.
+
+## Expanded experience checklist
+
+See [feature scope and acceptance requirements](features.md). These items extend the phases above; none are complete merely because the foundation exists.
+
+- [ ] F01: Cinematic room experience.
+- [ ] F02: Authoritative playback synchronization.
+- [ ] F03: Social presence.
+- [ ] F04: Floating reactions.
+- [ ] F05: Optional voice rooms.
+- [ ] F06: Advanced chat.
+- [ ] F07: Collaborative media queue.
+- [ ] F08: Watch-party polls.
+- [ ] F09: Rich invitations.
+- [ ] F10: Room privacy and controls.
+- [ ] F11: Host, moderator, member, and guest roles.
+- [ ] F12: Mobile-first room experience.
+- [ ] F13: Multi-device continuation.
+- [ ] F14: Personal dashboard.
+- [ ] F15: Global search.
+- [ ] F16: Notification center.
+- [ ] F17: Scheduled rooms.
+- [ ] F18: Recurring rooms.
+- [ ] F19: Optional room analytics.
+- [ ] F20: Themes and personalization.
+- [ ] F21: Micro-animations.
+- [ ] F22: Connection quality.
+- [ ] F23: Room diagnostics.
+- [ ] F24: Media chapters.
+- [ ] F25: Shared notes.
+- [ ] F26: Saved moments and screenshots.
+- [ ] F27: Room memories.
+- [ ] F28: Optional AI assistance.
+- [ ] F29: Privacy controls.
+- [ ] F30: Recovery and error UX.

@@ -36,3 +36,20 @@ Use foreign keys, unique constraints, validation constraints, and explicit reten
 ## Migration plan
 
 Inspect and back up the real database first. Create a versioned baseline compatible with existing IDs and accounts. Migrate the password column deliberately. Existing rooms have no trustworthy owner/type, so define an archive or upgrade policy rather than assigning invented owners. Test on a disposable database and document recovery before touching live data.
+
+## Expanded schema candidates — not migrated
+
+| Candidate | Purpose |
+| --- | --- |
+| room_invites / join_requests / room_bans | Hashed invite tokens, expiry/use limits, approval, and access restrictions |
+| room_policies | Explicit permissions and room privacy settings |
+| message_reactions / pinned_messages | Unique reactions, pins, and moderation metadata |
+| polls / poll_options / poll_votes | Server deadlines and unique eligible votes |
+| saved_queues / saved_queue_items | User-owned saved playlists and order |
+| room_schedules / schedule_occurrences / reminder_jobs | Time zones, recurrence, cancellations, and deduplicated delivery |
+| device_sessions / playback_progress | Authorized device handoff and private resume positions |
+| media_chapters / room_notes / saved_moments | Media-relative timestamps, captions, authors, and optional capture references |
+| session_memories / room_metrics | Access-controlled session summaries and aggregates |
+| privacy_preferences / optional_ai_jobs | Consent, history visibility, processing state, retention, and deletion |
+
+These are design candidates, not final table definitions. Integrate with existing planned entities instead of duplicating them. Choose foreign keys, visibility, retention, and account-deletion behavior before migration. Keep transient reactions/voice presence ephemeral unless a defined feature requires retained aggregates. Never persist raw microphone streams by default.

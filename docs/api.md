@@ -30,3 +30,9 @@ Existing response shapes are preserved. Invalid JSON, oversized bodies, and unkn
 - Favorites and notifications: user-scoped CRUD/read-state operations.
 
 Use a consistent public room identifier, pagination, stable error codes, and server-side access filtering. Never return password hashes, session values, or internal database errors. Keep HTTP/socket permission rules in shared services.
+
+## Expanded API groups — proposed only
+
+Future service-backed routes will cover invite creation/redemption/revocation, join approvals/bans, room policy and roles, chat reactions/pins/search, polls/votes, saved queues, scheduled/recurring rooms, reminders, own-device handoff, private history/progress, chapters/notes/moments, memories, privacy preferences, and authorized diagnostics/analytics. Optional voice access and AI jobs require separate contracts and provider decisions.
+
+Define exact methods/payloads alongside implementation. Apply server authorization to every read/write, use pagination for lists, and use atomic/idempotent operations for single-use invite redemption, votes, reminders, and device handoff. Search must filter inaccessible rooms and private history. Guest access needs explicit limited identity and permissions.

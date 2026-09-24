@@ -28,3 +28,11 @@ Use revisions to reject stale state, bounded drift correction, and suppression o
 Required future tests: two clients, room isolation, nonmember access, unauthorized playback, revoked sessions, retries, stale revisions, late joins, reconnect, and autoplay failures. Multiple backend instances additionally require shared coordination.
 
 References: [server initialization](https://socket.io/docs/v4/server-initialization/) and [TypeScript event contracts](https://socket.io/docs/v4/typescript/).
+
+## Expanded events — proposed only
+
+Additional event families may include ephemeral player reactions, polls/results, richer presence/activity, moderation/policy changes, queue suggestions/skip votes, notification delivery, device handoff, and notes/moments. Establish typed payloads and acknowledgements before adding handlers. Persistent changes must use the same services as HTTP; restrict all broadcasts to authorized recipients.
+
+Add playback rate to authoritative state; elapsed playing time must account for that rate. Chapters and timestamp notes/moments reuse authorized seek commands. Expose measured round-trip latency and drift rather than invented quality scores; calibrate labels and test reconnect behavior. A connection indicator does not establish database or media health.
+
+Voice requires its own evaluated transport and microphone lifecycle. Socket.IO may coordinate authorized signaling, but is not a substitute for an audio transport. Host mute must not enable another user's microphone. Rate-limit reaction bursts and typing; define one-account vote eligibility and disconnect handling before queue/poll voting.

@@ -10,6 +10,7 @@ Hangout is a work-in-progress app for private watch and music parties. Friends w
 
 - [Architecture and folder structure](docs/architecture.md)
 - [Checked implementation roadmap](docs/TODO.md)
+- [Expanded feature roadmap — 30 planned experiences](docs/features.md)
 - [HTTP API](docs/api.md)
 - [Database design](docs/database.md)
 - [Real-time events and synchronization](docs/realtime.md)
@@ -132,3 +133,7 @@ The frontend still uses a localStorage login flag. That is a UI gate, **not serv
 Follow [the roadmap](docs/TODO.md): foundation → secure authentication → UI shell → persistent rooms → authenticated chat/presence → synchronized media → personal features → release checks.
 
 Technical references: [Vite environment configuration](https://vite.dev/guide/env-and-mode), [Socket.IO server setup](https://socket.io/docs/v4/server-initialization/), and [Socket.IO TypeScript contracts](https://socket.io/docs/v4/typescript/).
+
+## Expanded product scope
+
+The [expanded roadmap](docs/features.md) adds cinematic rooms, floating reactions, voice, advanced chat, collaborative queue voting, polls, richer invites, privacy/guest roles, mobile and device handoff, scheduling/recurrence, themes, diagnostics, chapters, notes, saved moments, memories, and optional analytics/AI. These are planned features with unchecked tasks, not claims of current functionality. Secure membership and the authoritative real-time room engine come first.

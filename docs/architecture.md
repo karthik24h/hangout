@@ -75,3 +75,11 @@ Start with one server process. Multiple instances need shared event coordination
 The foundation migrated from JavaScript/CRA to strict TypeScript/Vite and separated Express startup from routes/configuration. Existing account/create/join/close URL shapes were retained. Unsafe password reset was disabled. Existing CSS and screen appearance were preserved; broad UI redesign is pending.
 
 Database schema changes were deliberately not applied to the uninspected existing database. Next steps are versioned migrations, runtime validation, and real authentication before private real-time features.
+
+## Expanded feature architecture — proposed
+
+See [the full feature catalog](features.md) and [tracking checklist](TODO.md). Build all room experiences on shared membership, permissions, lifecycle, message, queue, and playback services. Add policy checks for guests, bans, approval, room locks, and feature toggles; the browser must not determine permission.
+
+Extend modules only as features ship: invitations/polls, scheduling/reminders, activity/history, notes/moments, notification delivery, device sessions, and privacy preferences. Scheduled and recurring rooms require a durable worker with time-zone-aware occurrences and idempotent jobs. Voice requires a separately evaluated audio transport/provider (for example, a WebRTC-based design); the current Socket.IO connection layer is not voice streaming.
+
+Device handoff is account-scoped and must define control ownership. Aggregate analytics and optional AI must respect room access, retention, and user privacy. No AI or voice provider has been selected or integrated. Keep watch history private by default. Synchronization is a measured tolerance with recovery behavior, not a promise of perfect playback alignment.
