@@ -297,3 +297,64 @@
     font-size: 25px;
   }
 }
+
+/* Keep decorative movement subtle and opt in only when motion is welcome. */
+@media (prefers-reduced-motion: no-preference) {
+  .auth-art-orbit {
+    animation: auth-orbit-sway 12s ease-in-out infinite;
+  }
+  .auth-art-disc {
+    animation: auth-art-float 6s ease-in-out infinite;
+  }
+  .auth-art-note {
+    animation: auth-note-drift 5s ease-in-out infinite;
+  }
+  .auth-art-caption {
+    animation: auth-art-float 7s ease-in-out -2s infinite;
+  }
+  .auth-art-caption span {
+    animation: auth-dot-pulse 3s ease-in-out infinite;
+  }
+}
+
+@keyframes auth-art-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes auth-orbit-sway {
+  0%,
+  100% {
+    transform: rotate(-20deg);
+  }
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes auth-note-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes auth-dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.55;
+  }
+}
