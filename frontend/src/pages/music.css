@@ -554,3 +554,10 @@
     }
   }
 }
+
+.dashboard .dash-main.music-main {
+  padding-top: 10px;
+}
+.music-heading h1 {
+  margin-bottom: 0;
+}

@@ -126,7 +126,6 @@ export default function MusicPage() {
           <div className="music-heading">
             <div>
               <h1>Find your rhythm.</h1>
-              <p>Your music. A little room to unwind.</p>
             </div>
             {!code && (
               <button className="dash-button primary" onClick={() => files.current?.click()}>
