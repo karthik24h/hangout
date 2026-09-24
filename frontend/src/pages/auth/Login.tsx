@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 import AuthLayout from './AuthLayout';
 import AuthSwitchLink from './AuthSwitchLink';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -15,7 +17,7 @@ export default function Login() {
     e.preventDefault();
     setError('');
     try {
-      await login(email, password);
+      await login(email, password, rememberMe);
       navigate('/');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Login failed';
@@ -65,9 +67,8 @@ export default function Login() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             className="form-input"
             placeholder="Enter your password"
             value={password}
@@ -77,6 +78,17 @@ export default function Login() {
           />
         </div>
 
+        <div className="auth-options">
+          <label className="auth-remember">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={e => setRememberMe(e.target.checked)}
+            />
+            Remember me
+          </label>
+          <AuthSwitchLink to="/forgot-password">Forgot password?</AuthSwitchLink>
+        </div>
         <button type="submit" className="auth-submit">
           Login
         </button>

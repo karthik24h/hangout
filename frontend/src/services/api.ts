@@ -42,7 +42,11 @@ export async function signup(data: {
   return res.json();
 }
 
-export async function login(data: { email: string; password: string }): Promise<AuthResponse> {
+export async function login(data: {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}): Promise<AuthResponse> {
   const res = await apiFetch('/login', {
     method: 'POST',
     body: JSON.stringify(data),

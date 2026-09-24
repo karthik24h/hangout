@@ -4,6 +4,7 @@ import HomePage from '../pages/HomePage';
 import MusicPage from '../pages/MusicPage';
 import VideosPage from '../pages/VideosPage';
 import FavoritesPage from '../pages/FavoritesPage';
+import PasswordRecovery from '../pages/auth/PasswordRecovery';
 import Signup from '../pages/auth/Signup';
 import Login from '../pages/auth/Login';
 import PrivateRoute from '../components/auth/PrivateRoute';
@@ -45,6 +46,8 @@ export default function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/forgot-password" element={<PasswordRecovery key="request" />} />
+        <Route path="/reset-password" element={<PasswordRecovery key="reset" reset />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 import AuthLayout from './AuthLayout';
 import AuthSwitchLink from './AuthSwitchLink';
 import { useAuth } from '../../context/AuthContext';
@@ -87,9 +88,8 @@ export default function Signup() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             className="form-input"
             placeholder="Create a password"
             minLength={8}

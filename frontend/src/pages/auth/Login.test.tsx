@@ -44,6 +44,34 @@ describe('Login Page', () => {
     expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
   });
 
+  it('toggles password visibility without submitting and sends the remember-me choice', async () => {
+    vi.mocked(apiLogin).mockResolvedValueOnce({
+      user: { id: 1, name: 'Test', email: 'test@example.com' },
+    });
+    renderWithAuth(<Login />);
+    const password = screen.getByLabelText('Password');
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(password, { target: { value: 'password123' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
+    expect(password).toHaveAttribute('type', 'text');
+    expect(apiLogin).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
+    expect(password).toHaveAttribute('type', 'password');
+    fireEvent.click(screen.getByLabelText('Remember me'));
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    await waitFor(() =>
+      expect(apiLogin).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        password: 'password123',
+        rememberMe: true,
+      })
+    );
+    expect(screen.getByRole('link', { name: 'Forgot password?' })).toHaveAttribute(
+      'href',
+      '/forgot-password'
+    );
+  });
+
   it('shows error when login fails', async () => {
     vi.mocked(apiLogin).mockRejectedValueOnce(new Error('Invalid credentials'));
 

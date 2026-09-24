@@ -50,7 +50,11 @@ router.post(
   '/api/login',
   validateBody(authValidationRules.login),
   asyncHandler(async (req, res) => {
-    const { email, password } = req.body as { email: string; password: string };
+    const { email, password, rememberMe } = req.body as {
+      email: string;
+      password: string;
+      rememberMe?: boolean;
+    };
 
     const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
@@ -64,7 +68,7 @@ router.post(
     }
 
     const token = await createSession(user.id);
-    res.cookie(SESSION_COOKIE_NAME, token, getSessionCookieOptions());
+    res.cookie(SESSION_COOKIE_NAME, token, getSessionCookieOptions(rememberMe === true));
     res.json({ user: { id: user.id, name: user.name, email: user.email } });
   })
 );
@@ -96,6 +100,11 @@ router.post(
   '/api/reset-password/request',
   validateBody(authValidationRules.resetPasswordRequest),
   asyncHandler(async (req, res) => {
+    if (process.env.NODE_ENV !== 'development') {
+      return res
+        .status(503)
+        .json({ error: 'Password recovery is currently unavailable. Please try again later.' });
+    }
     const { email } = req.body as { email: string };
 
     const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email]);

@@ -63,12 +63,12 @@ export async function cleanupExpiredSessions(): Promise<number> {
   return result.rowCount ?? 0;
 }
 
-export function getSessionCookieOptions(): Record<string, unknown> {
+export function getSessionCookieOptions(rememberMe = false): Record<string, unknown> {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
-    maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
+    ...(rememberMe ? { maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000 } : {}),
     path: '/',
   };
 }

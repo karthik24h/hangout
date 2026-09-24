@@ -170,6 +170,7 @@ export const authValidationRules = {
     password: { required: true, type: 'password' as const },
   },
   login: {
+    rememberMe: { type: 'boolean' as const },
     email: { required: true, type: 'email' as const },
     password: { required: true, type: 'string' as const, minLength: 1 },
   },
