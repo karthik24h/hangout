@@ -133,7 +133,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="header">
+      <header className={`header${isRoomPage && roomCode ? ' header--room' : ''}`}>
         <div className="header-left">
           <Link to="/" className="header-logo">
             Hangout

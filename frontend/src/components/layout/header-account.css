@@ -127,3 +127,80 @@
     font-size: 21px;
   }
 }
+
+/* Keep shared controls usable when room actions need their own row. */
+.header .header-left,
+.header .header-actions {
+  min-width: 0;
+}
+.header .header-account {
+  flex-shrink: 0;
+}
+.header-account-panel {
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+}
+@media (max-width: 900px) {
+  .header.header--room {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+    height: auto;
+    min-height: 72px;
+    gap: 12px 8px;
+    padding: 14px;
+  }
+  .header--room .header-actions {
+    display: contents;
+  }
+  .header--room .header-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .header--room .theme-toggle {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .header--room .header-account {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .header--room .header-logout {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .header--room .header-room-info {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .header--room .room-code {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+  .header--room .header-room-info .btn {
+    min-height: 44px;
+  }
+}
+@media (max-width: 600px) {
+  .header:not(.header--room) {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 72px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+  .dashboard .header:not(.header--room) {
+    flex-wrap: nowrap;
+  }
+  .header .header-actions {
+    gap: 5px;
+  }
+  .header-account-panel {
+    right: -49px;
+  }
+}
