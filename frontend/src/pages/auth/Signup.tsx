@@ -1,32 +1,27 @@
-import { apiFetch } from '../../services/api';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/App.css';
 
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { signup } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await apiFetch('/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert('Signup successful!');
-        navigate('/login');
-      } else {
-        alert(data.message || 'Signup failed');
-      }
-    } catch (error) {
-      console.error('Signup Error:', error);
-      alert('Server error');
+      await signup(name, email, password);
+      alert('Signup successful!');
+      navigate('/login');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Signup failed';
+      setError(message);
+      alert(message);
     }
   };
 
@@ -34,6 +29,7 @@ export default function Signup() {
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2>Create Account</h2>
+        {error && <div className="error-message">{error}</div>}
         <input
           type="text"
           placeholder="Name"
