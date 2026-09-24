@@ -256,7 +256,12 @@ export default function Header() {
         </div>
       </header>
 
-      {isModalOpen && <CreateRoomModal onClose={closeModal} />}
+      {isModalOpen && (
+        <CreateRoomModal
+          onClose={closeModal}
+          initialType={location.pathname === '/music' ? 'music' : 'video'}
+        />
+      )}
 
       {showLogoutConfirm && (
         <div

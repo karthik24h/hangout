@@ -2,12 +2,18 @@ import { apiFetch } from '../../services/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
+export default function CreateRoomModal({
+  onClose,
+  initialType = 'video',
+}: {
+  onClose: () => void;
+  initialType?: 'video' | 'music';
+}) {
   const [roomName, setRoomName] = useState('');
   const [setPassword, setSetPassword] = useState(false);
   const [password, setPasswordValue] = useState('');
   const [error, setError] = useState('');
-  const [mediaType, setMediaType] = useState<'video' | 'music'>('video');
+  const [mediaType, setMediaType] = useState<'video' | 'music'>(initialType);
   const [privacy, setPrivacy] = useState<'public' | 'private' | 'invite_only'>('public');
   const navigate = useNavigate();
 

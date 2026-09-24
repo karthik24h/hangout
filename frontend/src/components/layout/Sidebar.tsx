@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import Icon from '../ui/Icon';
 import './sidebar.css';
 
@@ -17,6 +17,9 @@ export default function Sidebar({
   onCreate: () => void;
   onJoin: () => void;
 }) {
+  const location = useLocation();
+  const currentLabel =
+    destinations.find(item => item.to === location.pathname)?.label || 'Your space';
   const [open, setOpen] = useState(false);
   const drawer = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -164,7 +167,7 @@ export default function Sidebar({
           </svg>
           Menu
         </button>
-        <span>Your space / Overview</span>
+        <span>Your space / {currentLabel}</span>
       </div>
       <dialog
         ref={drawer}
