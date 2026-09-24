@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
 import CreateRoomModal from '../components/room/CreateRoomModal';
 import JoinRoomModal from '../components/room/JoinRoomModal';
@@ -53,44 +54,7 @@ export default function HomePage() {
     <div className="dashboard">
       <Header />
       <div className="dash-shell">
-        <aside className="dash-sidebar">
-          <p className="dash-nav-label">YOUR SPACE</p>
-          <nav aria-label="Main navigation">
-            <Link to="/" className="dash-nav-item active" aria-current="page">
-              <Icon name="home" />
-              Overview
-            </Link>
-            <Link to="/music" className="dash-nav-item">
-              <Icon name="music" />
-              Music
-            </Link>
-            <Link to="/videos" className="dash-nav-item">
-              <Icon name="video" />
-              Videos
-            </Link>
-            <Link to="/favorites" className="dash-nav-item">
-              <Icon name="heart" />
-              Favorites
-            </Link>
-          </nav>
-          <div className="dash-sidebar-note">
-            <span className="dash-mini-mark">h.</span>
-            <h3>
-              Good company.
-              <br />
-              Great moments.
-            </h3>
-            <p>Your next hangout is one invitation away.</p>
-            <button onClick={() => setJoin(true)}>
-              Have a room code?
-              <Icon name="arrow" />
-            </button>
-          </div>
-          <Link to="/settings" className="dash-nav-item dash-settings">
-            <Icon name="settings" />
-            Settings
-          </Link>
-        </aside>
+        <Sidebar onCreate={() => setCreate(true)} onJoin={() => setJoin(true)} />
         <main className="dash-main">
           <div className="dash-page-heading">
             <div>
