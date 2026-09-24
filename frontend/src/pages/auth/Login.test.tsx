@@ -38,8 +38,8 @@ describe('Login Page', () => {
   it('renders login form with email and password fields', () => {
     renderWithAuth(<Login />);
 
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
     expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
   });
@@ -49,10 +49,10 @@ describe('Login Page', () => {
 
     renderWithAuth(<Login />);
 
-    fireEvent.change(screen.getByPlaceholderText('Email'), {
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Password'), {
+    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
       target: { value: 'wrongpassword' },
     });
     fireEvent.click(screen.getByRole('button', { name: /login/i }));

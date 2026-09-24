@@ -30,7 +30,15 @@ export async function signup(data: {
     method: 'POST',
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error((await res.json()).error || 'Signup failed');
+  if (!res.ok) {
+    const body = await res.json();
+    const messages = Array.isArray(body.details)
+      ? body.details
+          .map((detail: { message?: unknown } | null) => detail?.message)
+          .filter((message: unknown): message is string => typeof message === 'string' && !!message)
+      : [];
+    throw new Error(messages.join('. ') || body.error || 'Signup failed');
+  }
   return res.json();
 }
 

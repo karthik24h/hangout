@@ -1,7 +1,6 @@
 import { apiFetch } from '../../services/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/App.css';
 
 export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
   const [roomName, setRoomName] = useState('');
@@ -57,76 +56,144 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="close-button" onClick={onClose}>
-          ×
-        </button>
-        <h2 className="modal-title">Create Room</h2>
-
-        <input
-          className="modal-input"
-          type="text"
-          placeholder="Room Name"
-          value={roomName}
-          onChange={e => {
-            setRoomName(e.target.value);
-            setError('');
-          }}
-        />
-
-        {error && <p className="error-text">{error}</p>}
-
-        <div className="modal-checkbox">
-          <input
-            type="checkbox"
-            id="setPassword"
-            checked={setPassword}
-            onChange={e => setSetPassword(e.target.checked)}
-          />
-          <label htmlFor="setPassword">Set a password (makes room private)</label>
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-room-title"
+    >
+      <div className="modal">
+        <div className="modal-header">
+          <h2 id="create-room-title" className="modal-title">
+            Create Room
+          </h2>
+          <button className="modal-close" onClick={onClose} aria-label="Close">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-
-        {setPassword && (
-          <input
-            className="modal-input"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPasswordValue(e.target.value)}
-          />
-        )}
-
-        <div className="media-type-dropdown">
-          <label htmlFor="mediaType">Select Media Type</label>
-          <select
-            id="mediaType"
-            value={mediaType}
-            onChange={e => setMediaType(e.target.value as 'video' | 'music')}
-            className="media-type-dropdown-select"
+        <div className="modal-body">
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              handleCreateRoom();
+            }}
           >
-            <option value="video">Video</option>
-            <option value="music">Music</option>
-          </select>
-        </div>
+            <div className="form-group mb-4">
+              <label htmlFor="roomName" className="form-label">
+                Room Name
+              </label>
+              <input
+                id="roomName"
+                type="text"
+                className="form-input"
+                placeholder="Enter room name"
+                value={roomName}
+                onChange={e => {
+                  setRoomName(e.target.value);
+                  setError('');
+                }}
+                required
+              />
+            </div>
 
-        <div className="media-type-dropdown">
-          <label htmlFor="privacy">Privacy</label>
-          <select
-            id="privacy"
-            value={privacy}
-            onChange={e => setPrivacy(e.target.value as 'public' | 'private' | 'invite_only')}
-            className="media-type-dropdown-select"
-          >
-            <option value="public">Public</option>
-            <option value="private">Private (password required)</option>
-            <option value="invite_only">Invite Only</option>
-          </select>
-        </div>
+            {error && (
+              <div className="alert alert-error mb-4" role="alert">
+                <svg
+                  className="alert-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <div className="alert-content">
+                  <p className="alert-message">{error}</p>
+                </div>
+              </div>
+            )}
 
-        <button className="modal-create-button" onClick={handleCreateRoom}>
-          Create Room
-        </button>
+            <div className="form-group mb-4">
+              <div className="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="setPassword"
+                  className="form-checkbox-input"
+                  checked={setPassword}
+                  onChange={e => setSetPassword(e.target.checked)}
+                />
+                <label htmlFor="setPassword">Set a password (makes room private)</label>
+              </div>
+            </div>
+
+            {setPassword && (
+              <div className="form-group mb-4">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  className="form-input"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={e => setPasswordValue(e.target.value)}
+                />
+              </div>
+            )}
+
+            <div className="form-group mb-4">
+              <label htmlFor="mediaType" className="form-label">
+                Media Type
+              </label>
+              <select
+                id="mediaType"
+                className="form-select"
+                value={mediaType}
+                onChange={e => setMediaType(e.target.value as 'video' | 'music')}
+              >
+                <option value="video">Video</option>
+                <option value="music">Music</option>
+              </select>
+            </div>
+
+            <div className="form-group mb-6">
+              <label htmlFor="privacy" className="form-label">
+                Privacy
+              </label>
+              <select
+                id="privacy"
+                className="form-select"
+                value={privacy}
+                onChange={e => setPrivacy(e.target.value as 'public' | 'private' | 'invite_only')}
+              >
+                <option value="public">Public</option>
+                <option value="private">Private (password required)</option>
+                <option value="invite_only">Invite Only</option>
+              </select>
+            </div>
+
+            <div className="flex gap-2 justify-end">
+              <button type="button" className="btn btn-secondary" onClick={onClose}>
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary" onClick={handleCreateRoom}>
+                Create Room
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

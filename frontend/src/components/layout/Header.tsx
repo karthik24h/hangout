@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../services/api';
-import '../../styles/App.css';
 import CreateRoomModal from '../room/CreateRoomModal';
 
 export default function Header() {
@@ -106,71 +105,73 @@ export default function Header() {
   };
 
   const isRoomPage = location.pathname === '/videos' || location.pathname === '/music';
+  const statusClass =
+    connectionStatus === 'connected'
+      ? 'connected'
+      : connectionStatus === 'connecting'
+        ? 'connecting'
+        : 'disconnected';
 
   return (
     <>
       <header className="header">
-        <h1 className="logo">Hangout</h1>
-        <span role="status" aria-live="polite">
-          Server: {connectionStatus}
-        </span>
-        <div className="header-buttons">
+        <div className="header-left">
+          <Link to="/" className="header-logo">
+            Hangout
+          </Link>
+        </div>
+        <div className="header-center">
+          <span className="header-status" role="status" aria-live="polite">
+            <span className={`header-status-dot ${statusClass}`} aria-hidden="true"></span>
+            Server: {connectionStatus}
+          </span>
+        </div>
+        <div className="header-right header-actions">
           {isRoomPage && roomCode ? (
-            <div className="room-code-info flex items-center gap-4">
-              <div className="room-id text-lg text-white">
-                <span>Room ID: </span>
-                <span className="text-blue-400 font-semibold">{roomCode}</span>
-              </div>
-              <button
-                className="copy-room-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow font-medium transition"
-                onClick={handleCopyRoom}
-              >
+            <div className="header-room-info">
+              <span className="room-code">Room ID: {roomCode}</span>
+              <button className="btn btn-secondary btn-sm" onClick={handleCopyRoom}>
                 Copy Code
               </button>
               {checkingCreator ? (
-                <span>Loading...</span>
+                <span className="text-muted text-sm">Loading...</span>
               ) : isCreator ? (
-                <button
-                  className="close-room-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow font-medium transition"
-                  onClick={handleCloseRoom}
-                >
+                <button className="btn btn-danger btn-sm" onClick={handleCloseRoom}>
                   Close Room
                 </button>
               ) : (
-                <button
-                  className="leave-room-btn bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md shadow font-medium transition"
-                  onClick={handleLeaveRoom}
-                >
+                <button className="btn btn-secondary btn-sm" onClick={handleLeaveRoom}>
                   Leave Room
                 </button>
               )}
             </div>
           ) : (
-            <button className="create-room-btn" onClick={openModal}>
+            <button className="btn btn-primary" onClick={openModal}>
               Create Room
             </button>
           )}
 
           <div className="profile-container">
-            <img
-              src={avatarUrl}
-              alt="User Avatar"
-              className="profile-avatar"
-              onClick={toggleProfile}
-            />
+            <img src={avatarUrl} alt="User Avatar" className="avatar" onClick={toggleProfile} />
 
             {isProfileOpen && (
-              <div className="profile-popup">
+              <div className="dropdown-menu" role="menu">
                 <div className="profile-info">
-                  <h3>{user?.name || 'User'}</h3>
-                  <p>{user?.email || ''}</p>
+                  <h3 className="text-sm font-semibold">{user?.name || 'User'}</h3>
+                  <p className="text-xs text-muted">{user?.email || ''}</p>
                 </div>
-                <div className="profile-actions">
-                  <Link to="/settings" className="settings-button-link" onClick={closeProfile}>
-                    Settings
-                  </Link>
-                  <button onClick={handleLogout}>Logout</button>
-                </div>
+                <hr className="dropdown-divider" />
+                <Link
+                  to="/settings"
+                  className="dropdown-item"
+                  onClick={closeProfile}
+                  role="menuitem"
+                >
+                  Settings
+                </Link>
+                <button className="dropdown-item" onClick={handleLogout} role="menuitem">
+                  Logout
+                </button>
               </div>
             )}
           </div>
@@ -180,16 +181,39 @@ export default function Header() {
       {isModalOpen && <CreateRoomModal onClose={closeModal} />}
 
       {showLogoutConfirm && (
-        <div className="logout-confirm-overlay">
-          <div className="logout-confirm-modal">
-            <h3>Confirm Logout</h3>
-            <p>Are you sure you want to logout?</p>
-            <div className="logout-confirm-buttons">
-              <button className="confirm-btn" onClick={confirmLogout}>
-                Confirm
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logout-title"
+        >
+          <div className="modal">
+            <div className="modal-header">
+              <h2 id="logout-title" className="modal-title">
+                Confirm Logout
+              </h2>
+              <button className="modal-close" onClick={cancelLogout} aria-label="Close">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
               </button>
-              <button className="cancel-btn" onClick={cancelLogout}>
+            </div>
+            <div className="modal-body">
+              <p className="text-secondary">Are you sure you want to logout?</p>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={cancelLogout}>
                 Cancel
+              </button>
+              <button className="btn btn-danger" onClick={confirmLogout}>
+                Confirm
               </button>
             </div>
           </div>

@@ -1,0 +1,7 @@
+/* Main Stylesheet - Imports all style modules */
+@import './global.css';
+@import './components.css';
+@import './layouts.css';
+
+/* Legacy support - will be removed after migration */
+@import './App.css';

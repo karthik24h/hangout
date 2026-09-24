@@ -38,9 +38,9 @@ describe('Signup Page', () => {
   it('renders signup form with name, email and password fields', () => {
     renderWithAuth(<Signup />);
 
-    expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Create a password (min 8 chars)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
     expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
   });
@@ -50,16 +50,39 @@ describe('Signup Page', () => {
 
     renderWithAuth(<Signup />);
 
-    fireEvent.change(screen.getByPlaceholderText('Name'), { target: { value: 'Test User' } });
-    fireEvent.change(screen.getByPlaceholderText('Email'), {
+    fireEvent.change(screen.getByPlaceholderText('Enter your name'), {
+      target: { value: 'Test User' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
       target: { value: 'existing@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByPlaceholderText('Create a password (min 8 chars)'), {
+      target: { value: 'password123' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/email already registered/i)).toBeInTheDocument();
     });
+  });
+
+  it('rejects a short password before calling signup', async () => {
+    renderWithAuth(<Signup />);
+    fireEvent.change(screen.getByPlaceholderText('Enter your name'), {
+      target: { value: 'test1' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
+      target: { value: 'test1@gmail.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Create a password (min 8 chars)'), {
+      target: { value: 'short' },
+    });
+    fireEvent.submit(screen.getByRole('button', { name: /sign up/i }).closest('form')!);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Password must be at least 8 characters'
+    );
+    expect(apiSignup).not.toHaveBeenCalled();
   });
 
   it('navigates to login page when link is clicked', () => {
