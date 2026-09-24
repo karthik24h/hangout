@@ -14,7 +14,11 @@ function shutdown() {
   stopping = true;
   const timeout = setTimeout(() => process.exit(1), 10_000);
   timeout.unref();
-  io.close(() => { void pool.end().then(() => { clearTimeout(timeout); }); });
+  io.close(() => {
+    void pool.end().then(() => {
+      clearTimeout(timeout);
+    });
+  });
 }
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);

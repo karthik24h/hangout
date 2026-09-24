@@ -24,7 +24,7 @@ export default function MusicPage() {
           <AudioPlayer
             autoPlay={false}
             src="http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"
-            onPlay={e => console.log("onPlay")}
+            onPlay={e => console.log('onPlay')}
             customAdditionalControls={[]}
             customVolumeControls={[]}
             className="music-player-audio"
@@ -37,16 +37,20 @@ export default function MusicPage() {
         <div className="music-player-chat">
           <h3>Chat</h3>
           <div className="music-player-chat-messages">
-            <p><strong>User1:</strong> Hey, Hiherese!</p>
-            <p><strong>User2:</strong> User1, Play?</p>
-            <p><strong>User3:</strong> User3, Chat</p>
-            <p><strong>User4:</strong> User : Welcome as</p>
+            <p>
+              <strong>User1:</strong> Hey, Hiherese!
+            </p>
+            <p>
+              <strong>User2:</strong> User1, Play?
+            </p>
+            <p>
+              <strong>User3:</strong> User3, Chat
+            </p>
+            <p>
+              <strong>User4:</strong> User : Welcome as
+            </p>
           </div>
-          <input
-            type="text"
-            placeholder="Type a message..."
-            className="music-player-chat-input"
-          />
+          <input type="text" placeholder="Type a message..." className="music-player-chat-input" />
         </div>
       </div>
     </div>

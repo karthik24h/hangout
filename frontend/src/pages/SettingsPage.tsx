@@ -37,7 +37,9 @@ export default function SettingsPage() {
           </select>
         </label>
 
-        <button type="submit" className="save-btn">Save Changes</button>
+        <button type="submit" className="save-btn">
+          Save Changes
+        </button>
       </form>
 
       <div className="danger-zone">
@@ -45,7 +47,9 @@ export default function SettingsPage() {
         <button className="delete-account-btn">Delete Account</button>
       </div>
 
-      <Link to="/" className="back-link">← Back to Home</Link>
+      <Link to="/" className="back-link">
+        ← Back to Home
+      </Link>
     </div>
   );
 }

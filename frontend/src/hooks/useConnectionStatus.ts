@@ -9,7 +9,10 @@ export function useConnectionStatus() {
     socket.on('disconnect', () => setStatus('Disconnected'));
     socket.on('connect_error', () => setStatus('Offline — retrying'));
     socket.connect();
-    return () => { socket.removeAllListeners(); socket.disconnect(); };
+    return () => {
+      socket.removeAllListeners();
+      socket.disconnect();
+    };
   }, []);
   return status;
 }

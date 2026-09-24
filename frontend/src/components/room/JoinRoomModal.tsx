@@ -41,7 +41,9 @@ export default function JoinRoomModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
+        <button className="close-button" onClick={onClose}>
+          ×
+        </button>
         <h2 className="modal-title">Join Room</h2>
 
         <input
@@ -49,7 +51,7 @@ export default function JoinRoomModal({ onClose }: { onClose: () => void }) {
           type="text"
           placeholder="Room Code"
           value={roomCode}
-          onChange={(e) => {
+          onChange={e => {
             setRoomCode(e.target.value.toUpperCase());
             setError('');
           }}
@@ -61,7 +63,7 @@ export default function JoinRoomModal({ onClose }: { onClose: () => void }) {
           type="password"
           placeholder="Password (if required)"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
         />
 
         {error && <p className="error-text">{error}</p>}

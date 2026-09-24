@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getCurrentUser, User, logout as apiLogout, login as apiLogin, signup as apiSignup } from '../services/api';
+import {
+  getCurrentUser,
+  User,
+  logout as apiLogout,
+  login as apiLogin,
+  signup as apiSignup,
+} from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Initial auth check - setState in effect is intentional for initial load
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
   }, [refresh]);
 

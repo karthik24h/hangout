@@ -2,18 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 import { validateSession, revokeSession } from '../utils/sessions';
 import { pool } from '../config/database';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: { id: number; name: string; email: string };
-      sessionToken?: string;
-    }
+declare module 'express' {
+  interface Request {
+    user?: { id: number; name: string; email: string };
+    sessionToken?: string;
   }
 }
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.hangout_session;
-  
+
   if (!token) {
     return next();
   }
@@ -24,10 +22,9 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     return next();
   }
 
-  const userResult = await pool.query(
-    `SELECT id, name, email FROM users WHERE id = $1`,
-    [session.userId]
-  );
+  const userResult = await pool.query(`SELECT id, name, email FROM users WHERE id = $1`, [
+    session.userId,
+  ]);
 
   if (userResult.rows.length === 0) {
     await revokeSession(token);

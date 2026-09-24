@@ -1,5 +1,5 @@
 import { useConnectionStatus } from '../../hooks/useConnectionStatus';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../services/api';
@@ -19,34 +19,43 @@ export default function Header() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  const checkCreator = useCallback(
+    async (code: string) => {
+      setCheckingCreator(true);
+      try {
+        const response = await apiFetch(`/rooms/${code}`);
+        if (response.ok) {
+          const data = await response.json();
+          setIsCreator(data.room?.host_id === user?.id);
+        }
+      } catch (error) {
+        console.error('Error checking room creator:', error);
+      } finally {
+        setCheckingCreator(false);
+      }
+    },
+    [user]
+  );
+
   useEffect(() => {
     const seed = Math.random().toString(36).substring(2, 15);
+    // Initial avatar generation - setState in effect is intentional for initial load
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAvatarUrl(`https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`);
 
     const params = new URLSearchParams(location.search);
     const code = params.get('room');
+    // Initial room code state - setState in effect is intentional for initial load
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRoomCode(code);
+    // Initial creator state - setState in effect is intentional for initial load
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsCreator(false);
-    
+
     if (code) {
       checkCreator(code);
     }
-  }, [location.search]);
-
-  const checkCreator = async (code: string) => {
-    setCheckingCreator(true);
-    try {
-      const response = await apiFetch(`/rooms/${code}`);
-      if (response.ok) {
-        const data = await response.json();
-        setIsCreator(data.room?.host_id === user?.id);
-      }
-    } catch (error) {
-      console.error('Error checking room creator:', error);
-    } finally {
-      setCheckingCreator(false);
-    }
-  };
+  }, [location.search, checkCreator]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -102,24 +111,36 @@ export default function Header() {
     <>
       <header className="header">
         <h1 className="logo">Hangout</h1>
-        <span role="status" aria-live="polite">Server: {connectionStatus}</span>
+        <span role="status" aria-live="polite">
+          Server: {connectionStatus}
+        </span>
         <div className="header-buttons">
           {isRoomPage && roomCode ? (
             <div className="room-code-info flex items-center gap-4">
               <div className="room-id text-lg text-white">
-                <span>Room ID: </span><span className="text-blue-400 font-semibold">{roomCode}</span>
+                <span>Room ID: </span>
+                <span className="text-blue-400 font-semibold">{roomCode}</span>
               </div>
-              <button className="copy-room-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCopyRoom}>
+              <button
+                className="copy-room-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow font-medium transition"
+                onClick={handleCopyRoom}
+              >
                 Copy Code
               </button>
               {checkingCreator ? (
                 <span>Loading...</span>
               ) : isCreator ? (
-                <button className="close-room-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleCloseRoom}>
+                <button
+                  className="close-room-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow font-medium transition"
+                  onClick={handleCloseRoom}
+                >
                   Close Room
                 </button>
               ) : (
-                <button className="leave-room-btn bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md shadow font-medium transition" onClick={handleLeaveRoom}>
+                <button
+                  className="leave-room-btn bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md shadow font-medium transition"
+                  onClick={handleLeaveRoom}
+                >
                   Leave Room
                 </button>
               )}
@@ -131,7 +152,12 @@ export default function Header() {
           )}
 
           <div className="profile-container">
-            <img src={avatarUrl} alt="User Avatar" className="profile-avatar" onClick={toggleProfile} />
+            <img
+              src={avatarUrl}
+              alt="User Avatar"
+              className="profile-avatar"
+              onClick={toggleProfile}
+            />
 
             {isProfileOpen && (
               <div className="profile-popup">
@@ -159,8 +185,12 @@ export default function Header() {
             <h3>Confirm Logout</h3>
             <p>Are you sure you want to logout?</p>
             <div className="logout-confirm-buttons">
-              <button className="confirm-btn" onClick={confirmLogout}>Confirm</button>
-              <button className="cancel-btn" onClick={cancelLogout}>Cancel</button>
+              <button className="confirm-btn" onClick={confirmLogout}>
+                Confirm
+              </button>
+              <button className="cancel-btn" onClick={cancelLogout}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

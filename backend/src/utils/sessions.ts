@@ -4,7 +4,7 @@ import { pool } from '../config/database';
 const SESSION_COOKIE_NAME = 'hangout_session';
 const SESSION_TTL_DAYS = 30;
 
-function hashToken(token: string): string {
+export function hashToken(token: string): string {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
@@ -17,10 +17,11 @@ export async function createSession(userId: number): Promise<string> {
   const tokenHash = hashToken(token);
   const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
 
-  await pool.query(
-    `INSERT INTO sessions (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
-    [userId, tokenHash, expiresAt]
-  );
+  await pool.query(`INSERT INTO sessions (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`, [
+    userId,
+    tokenHash,
+    expiresAt,
+  ]);
 
   return token;
 }
@@ -45,10 +46,7 @@ export async function validateSession(token: string): Promise<{ userId: number }
 
 export async function revokeSession(token: string): Promise<void> {
   const tokenHash = hashToken(token);
-  await pool.query(
-    `UPDATE sessions SET revoked_at = NOW() WHERE token_hash = $1`,
-    [tokenHash]
-  );
+  await pool.query(`UPDATE sessions SET revoked_at = NOW() WHERE token_hash = $1`, [tokenHash]);
 }
 
 export async function revokeAllUserSessions(userId: number): Promise<void> {
@@ -71,7 +69,7 @@ export function getSessionCookieOptions(): Record<string, unknown> {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
     maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
-    path: '/'
+    path: '/',
   };
 }
 

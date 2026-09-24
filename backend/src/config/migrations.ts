@@ -87,7 +87,7 @@ const migrations: Migration[] = [
       CREATE INDEX idx_rooms_room_code ON rooms(room_code);
       CREATE INDEX idx_rooms_host_id ON rooms(host_id);
       CREATE INDEX idx_rooms_status ON rooms(status);
-    `
+    `,
   },
   {
     name: '002_create_sessions_and_password_resets',
@@ -116,7 +116,7 @@ const migrations: Migration[] = [
 
       CREATE INDEX idx_password_reset_tokens_token_hash ON password_reset_tokens(token_hash);
       CREATE INDEX idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
-    `
+    `,
   },
   {
     name: '003_create_room_membership_and_messages',
@@ -146,7 +146,7 @@ const migrations: Migration[] = [
       CREATE INDEX idx_messages_room_id_created_at ON messages(room_id, created_at DESC);
       CREATE INDEX idx_messages_user_id ON messages(user_id);
       CREATE UNIQUE INDEX idx_messages_idempotency ON messages(client_idempotency_key) WHERE client_idempotency_key IS NOT NULL;
-    `
+    `,
   },
   {
     name: '004_create_media_queue_and_playback',
@@ -182,7 +182,7 @@ const migrations: Migration[] = [
         revision BIGINT NOT NULL DEFAULT 0,
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
-    `
+    `,
   },
   {
     name: '005_create_favorites_settings_notifications',
@@ -213,7 +213,7 @@ const migrations: Migration[] = [
       );
 
       CREATE INDEX idx_notifications_user_id_read_at ON notifications(user_id, read_at);
-    `
+    `,
   },
   {
     name: '006_create_room_activity',
@@ -228,8 +228,8 @@ const migrations: Migration[] = [
       );
 
       CREATE INDEX idx_room_activity_room_id_created_at ON room_activity(room_id, created_at DESC);
-    `
-  }
+    `,
+  },
 ];
 
 export async function closePool() {

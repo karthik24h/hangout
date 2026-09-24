@@ -41,7 +41,7 @@ export function validateBody(rules: ValidationRules) {
 
     for (const [field, rule] of Object.entries(rules)) {
       const value = req.body[field];
-      
+
       // Check required
       if (rule.required && (value === undefined || value === null || value === '')) {
         errors.push({ field, message: `${field} is required` });
@@ -65,10 +65,18 @@ export function validateBody(rules: ValidationRules) {
       // String validations
       if (typeof value === 'string') {
         if (rule.minLength !== undefined && value.length < rule.minLength) {
-          errors.push({ field, message: `${field} must be at least ${rule.minLength} characters`, value });
+          errors.push({
+            field,
+            message: `${field} must be at least ${rule.minLength} characters`,
+            value,
+          });
         }
         if (rule.maxLength !== undefined && value.length > rule.maxLength) {
-          errors.push({ field, message: `${field} must be at most ${rule.maxLength} characters`, value });
+          errors.push({
+            field,
+            message: `${field} must be at most ${rule.maxLength} characters`,
+            value,
+          });
         }
         if (rule.pattern && !rule.pattern.test(value)) {
           errors.push({ field, message: `${field} format is invalid`, value });
@@ -102,9 +110,9 @@ export function validateBody(rules: ValidationRules) {
     }
 
     if (errors.length > 0) {
-      return res.status(400).json({ 
-        error: 'Validation failed', 
-        details: errors 
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: errors,
       });
     }
 
@@ -176,10 +184,20 @@ export const authValidationRules = {
 
 export const roomValidationRules = {
   create: {
-    name: { required: false, type: 'string' as const, maxLength: 100, transform: (v: unknown) => v || 'Unnamed Room' },
+    name: {
+      required: false,
+      type: 'string' as const,
+      maxLength: 100,
+      transform: (v: unknown) => v || 'Unnamed Room',
+    },
     type: { required: true, type: 'string' as const, enum: ['video', 'music'] },
     password: { required: false, type: 'string' as const, maxLength: 100 },
-    privacy: { required: false, type: 'string' as const, enum: ['public', 'private', 'invite_only'], transform: (v: unknown) => v || 'public' },
+    privacy: {
+      required: false,
+      type: 'string' as const,
+      enum: ['public', 'private', 'invite_only'],
+      transform: (v: unknown) => v || 'public',
+    },
   },
   join: {
     password: { required: false, type: 'string' as const, maxLength: 100 },

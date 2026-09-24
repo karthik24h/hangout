@@ -24,7 +24,9 @@ export async function createPasswordResetToken(userId: number): Promise<string> 
   return token;
 }
 
-export async function validatePasswordResetToken(token: string): Promise<{ userId: number } | null> {
+export async function validatePasswordResetToken(
+  token: string
+): Promise<{ userId: number } | null> {
   const tokenHash = hashToken(token);
 
   const result = await pool.query(
@@ -44,10 +46,9 @@ export async function validatePasswordResetToken(token: string): Promise<{ userI
 
 export async function usePasswordResetToken(token: string): Promise<void> {
   const tokenHash = hashToken(token);
-  await pool.query(
-    `UPDATE password_reset_tokens SET used_at = NOW() WHERE token_hash = $1`,
-    [tokenHash]
-  );
+  await pool.query(`UPDATE password_reset_tokens SET used_at = NOW() WHERE token_hash = $1`, [
+    tokenHash,
+  ]);
 }
 
 export async function cleanupExpiredResetTokens(): Promise<number> {

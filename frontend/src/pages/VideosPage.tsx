@@ -34,10 +34,18 @@ export default function VideosPage() {
         <div className="chat-section w-1/3 bg-gray-900 rounded-lg p-4 flex flex-col">
           <h3 className="text-xl font-semibold mb-4">Chat</h3>
           <div className="chat-messages flex-1 overflow-y-auto bg-gray-800 rounded-lg p-3 mb-3 space-y-2 text-sm">
-            <p><strong>User 1:</strong> Hello!</p>
-            <p><strong>User 1:</strong> Hi!</p>
-            <p><strong>User 1:</strong> This movie is great</p>
-            <p><strong>User 1:</strong> Yes, I love this scene.</p>
+            <p>
+              <strong>User 1:</strong> Hello!
+            </p>
+            <p>
+              <strong>User 1:</strong> Hi!
+            </p>
+            <p>
+              <strong>User 1:</strong> This movie is great
+            </p>
+            <p>
+              <strong>User 1:</strong> Yes, I love this scene.
+            </p>
           </div>
           <div className="chat-input mt-auto">
             <input

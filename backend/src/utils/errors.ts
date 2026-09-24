@@ -72,14 +72,16 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
   // PostgreSQL errors
   if (error && typeof error === 'object' && 'code' in error) {
     const pgError = error as { code: string; detail?: string };
-    if (pgError.code === '23505') { // Unique violation
+    if (pgError.code === '23505') {
+      // Unique violation
       return res.status(409).json({
         error: 'Resource already exists',
         code: 'DUPLICATE_ENTRY',
         details: pgError.detail,
       });
     }
-    if (pgError.code === '23503') { // Foreign key violation
+    if (pgError.code === '23503') {
+      // Foreign key violation
       return res.status(400).json({
         error: 'Referenced resource does not exist',
         code: 'INVALID_REFERENCE',
@@ -96,7 +98,9 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
 }
 
 // Async wrapper to catch errors in async route handlers
-export function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>) {
+export function asyncHandler(
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };

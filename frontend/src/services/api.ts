@@ -21,7 +21,11 @@ export async function apiFetch(path: string, options?: RequestInit): Promise<Res
   });
 }
 
-export async function signup(data: { name: string; email: string; password: string }): Promise<AuthResponse> {
+export async function signup(data: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<AuthResponse> {
   const res = await apiFetch('/signup', {
     method: 'POST',
     body: JSON.stringify(data),

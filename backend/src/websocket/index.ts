@@ -4,6 +4,17 @@ import type { ClientToServerEvents, ServerToClientEvents } from '../../../shared
 import { validateSession, revokeSession } from '../utils/sessions';
 import { pool } from '../config/database';
 
+let cookieModule: { parse: (str: string) => Record<string, string> } | null = null;
+
+async function getCookieModule(): Promise<{ parse: (str: string) => Record<string, string> }> {
+  if (!cookieModule) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mod: any = await import('cookie');
+    cookieModule = { parse: mod.parse };
+  }
+  return cookieModule!;
+}
+
 interface AuthenticatedSocket {
   userId: number;
   userName: string;
@@ -23,9 +34,6 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
     maxHttpBufferSize: 16_384,
   });
 
-  // Use require for cookie parser (CommonJS)
-  const cookie = require('cookie');
-
   // Session validation middleware for Socket.IO
   io.use(async (socket, next) => {
     try {
@@ -35,10 +43,11 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
         return next(); // Allow connection but mark as unauthenticated
       }
 
-      // Parse cookies
+      // Parse cookies (dynamic import for ESM module)
+      const cookie = await getCookieModule();
       const parsedCookies = cookie.parse(cookies);
       const sessionToken = parsedCookies.hangout_session;
-      
+
       if (!sessionToken) {
         return next(); // Allow connection but mark as unauthenticated
       }
@@ -50,10 +59,9 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
       }
 
       // Get user info
-      const userResult = await pool.query(
-        `SELECT id, name, email FROM users WHERE id = $1`,
-        [session.userId]
-      );
+      const userResult = await pool.query(`SELECT id, name, email FROM users WHERE id = $1`, [
+        session.userId,
+      ]);
 
       if (userResult.rows.length === 0) {
         return next(); // Allow connection but mark as unauthenticated
@@ -77,22 +85,22 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
   // Public diagnostics only. Do not expose room data until sessions and membership exist.
   io.on('connection', socket => {
     socket.emit('server:ready', { protocolVersion: 1 });
-    
+
     socket.on('health:ping', reply => {
       if (typeof reply === 'function') reply({ ok: true });
     });
 
     // Handle session validation request
-    socket.on('auth:validate', (reply) => {
+    socket.on('auth:validate', reply => {
       if (typeof reply === 'function') {
         if (socket.authUser) {
-          reply({ 
-            ok: true, 
+          reply({
+            ok: true,
             user: {
               id: socket.authUser.userId,
               name: socket.authUser.userName,
               email: socket.authUser.userEmail,
-            }
+            },
           });
         } else {
           reply({ ok: false, error: 'Not authenticated' });
@@ -101,7 +109,7 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
     });
 
     // Handle logout from socket
-    socket.on('auth:logout', async (reply) => {
+    socket.on('auth:logout', async reply => {
       if (typeof reply === 'function') {
         if (socket.authUser?.sessionToken) {
           await revokeSession(socket.authUser.sessionToken);
@@ -116,7 +124,9 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
 }
 
 // Helper to get authenticated user from socket
-export function getSocketUser(socket: { authUser?: AuthenticatedSocket }): AuthenticatedSocket | null {
+export function getSocketUser(socket: {
+  authUser?: AuthenticatedSocket;
+}): AuthenticatedSocket | null {
   return socket.authUser || null;
 }
 

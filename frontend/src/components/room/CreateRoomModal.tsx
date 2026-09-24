@@ -18,7 +18,12 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const body: { name: string; type: 'video' | 'music'; password?: string; privacy: 'public' | 'private' | 'invite_only' } = {
+    const body: {
+      name: string;
+      type: 'video' | 'music';
+      password?: string;
+      privacy: 'public' | 'private' | 'invite_only';
+    } = {
       name: roomName.trim(),
       type: mediaType,
       privacy,
@@ -54,7 +59,9 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
+        <button className="close-button" onClick={onClose}>
+          ×
+        </button>
         <h2 className="modal-title">Create Room</h2>
 
         <input
@@ -62,7 +69,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
           type="text"
           placeholder="Room Name"
           value={roomName}
-          onChange={(e) => {
+          onChange={e => {
             setRoomName(e.target.value);
             setError('');
           }}
@@ -75,7 +82,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
             type="checkbox"
             id="setPassword"
             checked={setPassword}
-            onChange={(e) => setSetPassword(e.target.checked)}
+            onChange={e => setSetPassword(e.target.checked)}
           />
           <label htmlFor="setPassword">Set a password (makes room private)</label>
         </div>
@@ -86,7 +93,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPasswordValue(e.target.value)}
+            onChange={e => setPasswordValue(e.target.value)}
           />
         )}
 
@@ -95,7 +102,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
           <select
             id="mediaType"
             value={mediaType}
-            onChange={(e) => setMediaType(e.target.value as 'video' | 'music')}
+            onChange={e => setMediaType(e.target.value as 'video' | 'music')}
             className="media-type-dropdown-select"
           >
             <option value="video">Video</option>
@@ -108,7 +115,7 @@ export default function CreateRoomModal({ onClose }: { onClose: () => void }) {
           <select
             id="privacy"
             value={privacy}
-            onChange={(e) => setPrivacy(e.target.value as 'public' | 'private' | 'invite_only')}
+            onChange={e => setPrivacy(e.target.value as 'public' | 'private' | 'invite_only')}
             className="media-type-dropdown-select"
           >
             <option value="public">Public</option>
