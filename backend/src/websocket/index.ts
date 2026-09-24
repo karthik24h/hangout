@@ -1,3 +1,5 @@
+import { roomMusic } from '../utils/music';
+import { isAppError } from '../utils/errors';
 import type { Server as HttpServer } from 'node:http';
 import { Server } from 'socket.io';
 import type { ClientToServerEvents, ServerToClientEvents } from '../../../shared/socket';
@@ -10,7 +12,7 @@ async function getCookieModule(): Promise<{ parse: (str: string) => Record<strin
   if (!cookieModule) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mod: any = await import('cookie');
-    cookieModule = { parse: mod.parse };
+    cookieModule = { parse: mod.parseCookie };
   }
   return cookieModule!;
 }
@@ -30,13 +32,16 @@ declare module 'socket.io' {
 
 export function attachSocketServer(server: HttpServer, frontendUrl: string) {
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
-    cors: { origin: frontendUrl },
+    cors: { origin: frontendUrl, credentials: true },
     maxHttpBufferSize: 16_384,
   });
 
   // Session validation middleware for Socket.IO
   io.use(async (socket, next) => {
     try {
+      if (socket.handshake.headers.origin && socket.handshake.headers.origin !== frontendUrl) {
+        return next(new Error('Origin not allowed'));
+      }
       // Get cookie from handshake headers
       const cookies = socket.handshake.headers.cookie;
       if (!cookies) {
@@ -85,6 +90,29 @@ export function attachSocketServer(server: HttpServer, frontendUrl: string) {
   // Public diagnostics only. Do not expose room data until sessions and membership exist.
   io.on('connection', socket => {
     socket.emit('server:ready', { protocolVersion: 1 });
+    let musicBusy = false;
+    let lastMusicRequest = 0;
+    socket.on('music:request', async (data, reply) => {
+      if (typeof reply !== 'function') return;
+      if (!socket.authUser || !data || typeof data !== 'object')
+        return reply({ ok: false, error: 'Authentication required' });
+      if (musicBusy || Date.now() - lastMusicRequest < 100)
+        return reply({ ok: false, error: 'Please wait before trying again.' });
+      musicBusy = true;
+      lastMusicRequest = Date.now();
+      try {
+        reply(
+          await roomMusic(socket.authUser.sessionToken, data.code, data.command, data.revision)
+        );
+      } catch (err) {
+        reply({
+          ok: false,
+          error: isAppError(err) ? err.message : 'Unable to synchronize room playback.',
+        });
+      } finally {
+        musicBusy = false;
+      }
+    });
 
     socket.on('health:ping', reply => {
       if (typeof reply === 'function') reply({ ok: true });

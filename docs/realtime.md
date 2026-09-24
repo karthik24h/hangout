@@ -40,3 +40,11 @@ Voice requires its own evaluated transport and microphone lifecycle. Socket.IO m
 ## Privileged operations events — planned
 
 Console metrics, reports, restriction updates, and maintenance broadcasts require separate authorized subscriptions and payload scopes; the current diagnostic socket exposes none of them. Check platform permissions independently of room roles. Revocations/bans must affect active connections and commands. See [console acceptance checks](admin-console.md) for required isolation and role-change tests.
+
+## Shared music playback
+
+Open `/music?room=CODE` after creating or joining a music room. Hosts can add public HTTPS audio files to the persisted shared queue, select/remove tracks, play/pause, and seek. Each listener presses **Join audio** to satisfy browser autoplay restrictions. Personal file playback at `/music` remains local; uploads and third-party music-service integration are not implemented.
+
+`music:request` uses authenticated Socket.IO acknowledgements for snapshots and host commands. Clients refresh snapshots every second and correct local drift greater than 400 ms. Position is calculated from server time, elapsed monotonic client time, and estimated network latency. This is approximate synchronization, not sample-accurate playback. Reconnects recover persisted state. The server rechecks session validity, active membership, room status, and host ownership on every request. Commands include the expected revision; stale commands are rejected rather than overwriting newer playback. Room mutations serialize through a database row lock. No automatic command retry occurs after an acknowledgement timeout.
+
+Migration `007_shared_music_state` adds the shared music document to `room_playback`. Run `npm run migrate` from `backend` before starting an updated deployment. Queue limit: 100 tracks. The backend stores URLs, and browsers fetch audio directly; the backend does not proxy or download submitted URLs. Hosts should use public audio links playable by all participants.

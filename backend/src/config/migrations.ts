@@ -230,6 +230,10 @@ const migrations: Migration[] = [
       CREATE INDEX idx_room_activity_room_id_created_at ON room_activity(room_id, created_at DESC);
     `,
   },
+  {
+    name: '007_shared_music_state',
+    sql: `ALTER TABLE room_playback ADD COLUMN music_state JSONB;`,
+  },
 ];
 
 export async function closePool() {

@@ -1,3 +1,4 @@
+import SharedMusic from '../components/music/SharedMusic';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/layout/Header';
@@ -114,13 +115,15 @@ export default function MusicPage() {
         <main className="dash-main music-main">
           <div className="music-heading">
             <div>
-                <h1>Find your rhythm.</h1>
+              <h1>Find your rhythm.</h1>
               <p>Your music. A little room to unwind.</p>
             </div>
-            <button className="dash-button primary" onClick={() => files.current?.click()}>
-              <Icon name="plus" />
-              Add audio
-            </button>
+            {!code && (
+              <button className="dash-button primary" onClick={() => files.current?.click()}>
+                <Icon name="plus" />
+                Add audio
+              </button>
+            )}
           </div>
           <input
             ref={files}
@@ -168,132 +171,136 @@ export default function MusicPage() {
               <Link to="/music">All music</Link>
             </div>
           )}
-          <div className="music-workspace">
-            <section className="music-player-panel" aria-labelledby="now-playing-title">
-              <div className="music-panel-heading">
-                <h2 id="now-playing-title">Now playing</h2>
-                <span className="music-badge">On this device</span>
-              </div>
-              <div className={`music-artwork${playing ? ' is-playing' : ''}`} aria-hidden="true">
-                <div className="music-vinyl">
-                  <div>
-                    <Icon name="music" />
+          {code ? (
+            <SharedMusic key={code} code={code} />
+          ) : (
+            <div className="music-workspace">
+              <section className="music-player-panel" aria-labelledby="now-playing-title">
+                <div className="music-panel-heading">
+                  <h2 id="now-playing-title">Now playing</h2>
+                  <span className="music-badge">On this device</span>
+                </div>
+                <div className={`music-artwork${playing ? ' is-playing' : ''}`} aria-hidden="true">
+                  <div className="music-vinyl">
+                    <div>
+                      <Icon name="music" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="music-track-info">
-                <h3>{active?.title || 'Make room for a little music'}</h3>
-                <p>{active ? active.source : 'Add your first track to start listening.'}</p>
-              </div>
-              {active ? (
-                <audio
-                  key={active.id}
-                  ref={audio}
-                  controls
-                  preload="metadata"
-                  src={active.src}
-                  onPlay={() => setPlaying(true)}
-                  onPause={() => setPlaying(false)}
-                  onEnded={() => {
-                    setPlaying(false);
-                    const next = tracks[tracks.findIndex(track => track.id === activeId) + 1];
-                    if (next) selectTrack(next.id);
-                  }}
-                  onError={() => {
-                    setPlaying(false);
-                    setError(
-                      'This track could not be played. Check the link or try another audio file.'
-                    );
-                  }}
-                />
-              ) : (
-                <button className="dash-button" onClick={() => files.current?.click()}>
-                  <Icon name="music" />
-                  Choose audio files
-                </button>
-              )}
-              <p className="music-local-note">
-                Playback and queue stay in this browser session. Audio is not uploaded or
-                synchronized with room members.
-              </p>
-            </section>
-            <section className="music-queue-panel" aria-labelledby="queue-title">
-              <div className="music-panel-heading">
-                <h2 id="queue-title">
-                  Your queue <span>{tracks.length}</span>
-                </h2>
-                <span>Session playlist</span>
-              </div>
-              {tracks.length ? (
-                <ol className="music-queue">
-                  {tracks.map((track, index) => (
-                    <li key={track.id} className={track.id === activeId ? 'selected' : ''}>
-                      <button
-                        className="music-track-select"
-                        onClick={() => selectTrack(track.id)}
-                        aria-current={track.id === activeId ? 'true' : undefined}
-                      >
-                        <span className="music-track-number">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <span>
-                          <strong>{track.title}</strong>
-                          <small>{track.source}</small>
-                        </span>
-                      </button>
-                      <button
-                        className="music-remove"
-                        aria-label={`Remove ${track.title}`}
-                        onClick={() => removeTrack(track)}
-                      >
-                        ×
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <div className="music-queue-empty">
-                  <Icon name="music" />
-                  <h3>A fresh start for your playlist</h3>
-                  <p>
-                    Add audio files or a direct link below.
-                    <br />
-                    Only the tracks you choose appear here.
-                  </p>
+                <div className="music-track-info">
+                  <h3>{active?.title || 'Make room for a little music'}</h3>
+                  <p>{active ? active.source : 'Add your first track to start listening.'}</p>
                 </div>
-              )}
-              <form className="music-add-link" onSubmit={addLink}>
-                <h3>Add an audio link</h3>
-                <label htmlFor="track-title">
-                  Track name <span>(optional)</span>
-                </label>
-                <input
-                  id="track-title"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  placeholder="Give your track a name"
-                  maxLength={200}
-                />
-                <label htmlFor="audio-url">Direct audio URL</label>
-                <input
-                  id="audio-url"
-                  type="url"
-                  required
-                  value={url}
-                  onChange={e => setUrl(e.target.value)}
-                  placeholder="https://example.com/song.mp3"
-                  aria-describedby="music-link-help"
-                />
-                <p id="music-link-help">
-                  Use a direct audio file link. Spotify and YouTube page links won’t play here.
+                {active ? (
+                  <audio
+                    key={active.id}
+                    ref={audio}
+                    controls
+                    preload="metadata"
+                    src={active.src}
+                    onPlay={() => setPlaying(true)}
+                    onPause={() => setPlaying(false)}
+                    onEnded={() => {
+                      setPlaying(false);
+                      const next = tracks[tracks.findIndex(track => track.id === activeId) + 1];
+                      if (next) selectTrack(next.id);
+                    }}
+                    onError={() => {
+                      setPlaying(false);
+                      setError(
+                        'This track could not be played. Check the link or try another audio file.'
+                      );
+                    }}
+                  />
+                ) : (
+                  <button className="dash-button" onClick={() => files.current?.click()}>
+                    <Icon name="music" />
+                    Choose audio files
+                  </button>
+                )}
+                <p className="music-local-note">
+                  Playback and queue stay in this browser session. Audio is not uploaded or
+                  synchronized with room members.
                 </p>
-                <button className="dash-button" type="submit">
-                  <Icon name="plus" />
-                  Add to queue
-                </button>
-              </form>
-            </section>
-          </div>
+              </section>
+              <section className="music-queue-panel" aria-labelledby="queue-title">
+                <div className="music-panel-heading">
+                  <h2 id="queue-title">
+                    Your queue <span>{tracks.length}</span>
+                  </h2>
+                  <span>Session playlist</span>
+                </div>
+                {tracks.length ? (
+                  <ol className="music-queue">
+                    {tracks.map((track, index) => (
+                      <li key={track.id} className={track.id === activeId ? 'selected' : ''}>
+                        <button
+                          className="music-track-select"
+                          onClick={() => selectTrack(track.id)}
+                          aria-current={track.id === activeId ? 'true' : undefined}
+                        >
+                          <span className="music-track-number">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span>
+                            <strong>{track.title}</strong>
+                            <small>{track.source}</small>
+                          </span>
+                        </button>
+                        <button
+                          className="music-remove"
+                          aria-label={`Remove ${track.title}`}
+                          onClick={() => removeTrack(track)}
+                        >
+                          ×
+                        </button>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <div className="music-queue-empty">
+                    <Icon name="music" />
+                    <h3>A fresh start for your playlist</h3>
+                    <p>
+                      Add audio files or a direct link below.
+                      <br />
+                      Only the tracks you choose appear here.
+                    </p>
+                  </div>
+                )}
+                <form className="music-add-link" onSubmit={addLink}>
+                  <h3>Add an audio link</h3>
+                  <label htmlFor="track-title">
+                    Track name <span>(optional)</span>
+                  </label>
+                  <input
+                    id="track-title"
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="Give your track a name"
+                    maxLength={200}
+                  />
+                  <label htmlFor="audio-url">Direct audio URL</label>
+                  <input
+                    id="audio-url"
+                    type="url"
+                    required
+                    value={url}
+                    onChange={e => setUrl(e.target.value)}
+                    placeholder="https://example.com/song.mp3"
+                    aria-describedby="music-link-help"
+                  />
+                  <p id="music-link-help">
+                    Use a direct audio file link. Spotify and YouTube page links won’t play here.
+                  </p>
+                  <button className="dash-button" type="submit">
+                    <Icon name="plus" />
+                    Add to queue
+                  </button>
+                </form>
+              </section>
+            </div>
+          )}
           {error && (
             <div className="music-error" role="alert">
               {error}
