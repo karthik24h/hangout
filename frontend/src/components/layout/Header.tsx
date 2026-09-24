@@ -1,12 +1,11 @@
-import { useConnectionStatus } from '../../hooks/useConnectionStatus';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiFetch } from '../../services/api';
+import './header-account.css';
 import CreateRoomModal from '../room/CreateRoomModal';
 
 export default function Header() {
-  const connectionStatus = useConnectionStatus();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -19,6 +18,30 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(String(user?.id || 'hangout'))}&backgroundColor=f3edf2`;
+
+  useEffect(() => {
+    if (!isProfileOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!profileRef.current?.contains(event.target as Node)) setIsProfileOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsProfileOpen(false);
+        profileButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isProfileOpen]);
 
   const checkCreator = useCallback(
     async (code: string) => {
@@ -107,12 +130,6 @@ export default function Header() {
   };
 
   const isRoomPage = location.pathname === '/videos' || location.pathname === '/music';
-  const statusClass =
-    connectionStatus.toLowerCase() === 'connected'
-      ? 'connected'
-      : connectionStatus.toLowerCase() === 'connecting'
-        ? 'connecting'
-        : 'disconnected';
 
   return (
     <>
@@ -121,12 +138,6 @@ export default function Header() {
           <Link to="/" className="header-logo">
             Hangout
           </Link>
-        </div>
-        <div className="header-center">
-          <span className="header-status" role="status" aria-live="polite">
-            <span className={`header-status-dot ${statusClass}`} aria-hidden="true"></span>
-            Server: {connectionStatus}
-          </span>
         </div>
         <div className="header-right header-actions">
           {isRoomPage && roomCode ? (
@@ -153,40 +164,6 @@ export default function Header() {
             </button>
           )}
 
-          <div className="profile-container">
-            <button
-              type="button"
-              className="header-profile-button"
-              onClick={toggleProfile}
-              aria-label="Account menu"
-              aria-expanded={isProfileOpen}
-              aria-haspopup="menu"
-            >
-              {user?.name?.trim().slice(0, 2).toUpperCase() || 'H'}
-            </button>
-
-            {isProfileOpen && (
-              <div className="dropdown-menu" role="menu">
-                <div className="profile-info">
-                  <h3 className="text-sm font-semibold">{user?.name || 'User'}</h3>
-                  <p className="text-xs text-muted">{user?.email || ''}</p>
-                </div>
-                <hr className="dropdown-divider" />
-                <Link
-                  to="/settings"
-                  className="dropdown-item"
-                  onClick={closeProfile}
-                  role="menuitem"
-                >
-                  Settings
-                </Link>
-                <button className="dropdown-item" onClick={handleLogout} role="menuitem">
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
             <svg
               viewBox="0 0 24 24"
@@ -205,6 +182,76 @@ export default function Header() {
                 </>
               )}
             </svg>
+          </button>
+          <div
+            className="profile-container header-account"
+            ref={profileRef}
+            onBlur={event => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                setIsProfileOpen(false);
+            }}
+          >
+            <button
+              type="button"
+              ref={profileButtonRef}
+              className="header-profile-button"
+              onClick={toggleProfile}
+              aria-label="Account menu"
+              aria-expanded={isProfileOpen}
+              aria-controls="header-account-panel"
+            >
+              {avatarFailed ? (
+                user?.name?.trim().slice(0, 2).toUpperCase() || 'H'
+              ) : (
+                <img src={avatarUrl} alt="" onError={() => setAvatarFailed(true)} />
+              )}
+            </button>
+            {isProfileOpen && (
+              <div className="header-account-panel" id="header-account-panel">
+                <span className="header-account-eyebrow">YOUR ACCOUNT</span>
+                <div className="header-account-identity">
+                  <strong>{user?.name || 'User'}</strong>
+                  <span>{user?.email || ''}</span>
+                </div>
+                <Link to="/settings" className="header-account-settings" onClick={closeProfile}>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2" />
+                  </svg>
+                  Account settings<span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            className="header-logout"
+            onClick={handleLogout}
+            aria-label="Log out"
+            title="Log out"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9 4H4v16h5m6-12 4 4-4 4m-6-4h10" />
+            </svg>
+            <span>Log out</span>
           </button>
         </div>
       </header>
