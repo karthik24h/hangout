@@ -10,8 +10,9 @@ import { attachSocketServer } from '../src/websocket';
 import { hashToken, createSession, revokeAllUserSessions } from '../src/utils/sessions';
 import bcrypt from 'bcrypt';
 
-// Use test database
-process.env.DATABASE_URL = 'postgresql://postgres:1234@localhost:5432/hangout';
+// The pool is initialized during imports. Never change DATABASE_URL afterwards.
+// Run this suite with DATABASE_URL pointing to a disposable *_test database.
+let cleanupAllowed = false;
 
 interface TestServer {
   url: string;
@@ -40,14 +41,30 @@ async function cleanupTestData() {
 let testServer: TestServer;
 
 before(async () => {
+  const connectionString = pool.options.connectionString;
+  const databaseName = connectionString
+    ? decodeURIComponent(new URL(connectionString).pathname.slice(1))
+    : '';
+  assert.match(
+    databaseName,
+    /_test$/,
+    'Refusing destructive auth tests: DATABASE_URL must point to a disposable database ending in _test'
+  );
+  cleanupAllowed = true;
   await cleanupTestData();
   testServer = await createTestServer();
 });
 
 after(async () => {
-  await cleanupTestData();
-  await new Promise<void>(resolve => testServer.io.close(() => resolve()));
-  testServer.server.close();
+  try {
+    if (cleanupAllowed) await cleanupTestData();
+  } finally {
+    if (testServer) {
+      await new Promise<void>(resolve => testServer.io.close(() => resolve()));
+      testServer.server.close();
+    }
+    await pool.end();
+  }
 });
 
 async function makeRequest(path: string, options: RequestInit = {}) {

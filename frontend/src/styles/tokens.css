@@ -1,14 +1,14 @@
 /* Design Tokens - CSS Custom Properties */
 :root {
   /* Color - Page/Panel/Card */
-  --color-page: #0b0d12;
-  --color-panel: #11141b;
-  --color-card: #181c24;
-  --color-border: #262b35;
+  --color-page: #f5f7fa;
+  --color-panel: #ffffff;
+  --color-card: #f9fafc;
+  --color-border: #e5e7eb;
 
   /* Color - Text */
-  --color-text-primary: #f5f7fa;
-  --color-text-secondary: #9ca3af;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
   --color-text-muted: #6b7280;
 
   /* Color - Accent & Semantic */
@@ -93,39 +93,7 @@
   --content-max-width: 1280px;
 }
 
-/* Dark mode (default) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-page: #0b0d12;
-    --color-panel: #11141b;
-    --color-card: #181c24;
-  }
-}
-
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-page: #f5f7fa;
-    --color-panel: #ffffff;
-    --color-card: #f9fafc;
-    --color-border: #e5e7eb;
-    --color-text-primary: #111827;
-    --color-text-secondary: #4b5563;
-    --color-text-muted: #9ca3af;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* System theme - respects OS preference */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    /* Dark is default */
-  }
-}
-
+/* Light mode (default) */
 :root[data-theme='light'] {
   --color-page: #f5f7fa;
   --color-panel: #ffffff;
@@ -133,9 +101,14 @@
   --color-border: #e5e7eb;
   --color-text-primary: #111827;
   --color-text-secondary: #4b5563;
-  --color-text-muted: #9ca3af;
+  --color-text-muted: #6b7280;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
+/* Dark mode */
 :root[data-theme='dark'] {
   --color-page: #0b0d12;
   --color-panel: #11141b;
@@ -144,4 +117,25 @@
   --color-text-primary: #f5f7fa;
   --color-text-secondary: #9ca3af;
   --color-text-muted: #6b7280;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* System preference fallback - dark when no theme set and OS is dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-page: #0b0d12;
+    --color-panel: #11141b;
+    --color-card: #181c24;
+    --color-border: #262b35;
+    --color-text-primary: #f5f7fa;
+    --color-text-secondary: #9ca3af;
+    --color-text-muted: #6b7280;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
 }

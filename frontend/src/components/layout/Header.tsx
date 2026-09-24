@@ -14,6 +14,7 @@ export default function Header() {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
   const [checkingCreator, setCheckingCreator] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -60,6 +61,7 @@ export default function Header() {
   const closeModal = () => setIsModalOpen(false);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const closeProfile = () => setIsProfileOpen(false);
+  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
   const handleLogout = () => {
     setShowLogoutConfirm(true);
@@ -175,6 +177,26 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              {theme === 'light' ? (
+                <path d="M12 2a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zm5.66 2.34a1 1 0 011.41 0l1.42 1.42a1 1 0 01-1.41 1.41L18.66 5.75a1 1 0 010-1.41zM21 7a2 2 0 01-2 2H5a2 2 0 01-2-2V2a2 2 0 012-2h14a2 2 0 012 2v3zm0 4a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v3zM7.25 10.75a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm0 4a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm6.5-8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm0 8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5zm3.75-8a.75.75 0 010-.5h1.5a.75.75 0 110 1.5h-1.5a.75.75 0 010-.5z" />
+              ) : (
+                <g>
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </g>
+              )}
+            </svg>
+          </button>
         </div>
       </header>
 

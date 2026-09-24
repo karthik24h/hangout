@@ -57,3 +57,12 @@ These are design candidates, not final table definitions. Integrate with existin
 ## Operations data — proposed only
 
 The [console plan](admin-console.md) adds platform roles/permissions and assignments, privileged sessions/MFA, reports and evidence references, restrictions/appeals, append-only audit events, settings revisions, announcement jobs, security events, flag revisions, maintenance state, and backup-job metadata. Reuse existing planned sessions/notifications/bans where appropriate. Enforce last-super-admin and target-role rules transactionally. Define redaction, private-evidence access, retention, and deletion before migration. No console schema has been applied.
+
+
+## Authentication integration tests
+
+The authentication suite deletes data before and after running. Run it only with
+`DATABASE_URL` set to a disposable PostgreSQL database whose name ends in `_test`
+(for example, `hangout_test`), with the application migrations applied there first.
+The suite refuses to run cleanup against other database names. Do not point these
+tests at a development or production database containing accounts you want to keep.
