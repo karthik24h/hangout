@@ -30,6 +30,13 @@ export default function MusicPage() {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
   const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const continuePlayback = useRef(false);
+  const lastVolume = useRef(1);
+  const timeLabel = (value: number) =>
+    `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`;
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomError, setRoomError] = useState('');
   const [loaded, setLoaded] = useState(false);
@@ -93,6 +100,9 @@ export default function MusicPage() {
     }
   }
   function selectTrack(id: string) {
+    continuePlayback.current = playing;
+    setPosition(0);
+    setDuration(0);
     setActiveId(id);
     setPlaying(false);
     setError('');
@@ -181,6 +191,10 @@ export default function MusicPage() {
                   <span className="music-badge">On this device</span>
                 </div>
                 <div className={`music-artwork${playing ? ' is-playing' : ''}`} aria-hidden="true">
+                  <span className="music-floating-note note-one">♪</span>
+                  <span className="music-floating-note note-two">♫</span>
+                  <span className="music-floating-note note-three">♩</span>
+                  <span className="music-floating-note note-four">♫</span>
                   <div className="music-vinyl">
                     <div>
                       <Icon name="music" />
@@ -192,26 +206,148 @@ export default function MusicPage() {
                   <p>{active ? active.source : 'Add your first track to start listening.'}</p>
                 </div>
                 {active ? (
-                  <audio
-                    key={active.id}
-                    ref={audio}
-                    controls
-                    preload="metadata"
-                    src={active.src}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onEnded={() => {
-                      setPlaying(false);
-                      const next = tracks[tracks.findIndex(track => track.id === activeId) + 1];
-                      if (next) selectTrack(next.id);
-                    }}
-                    onError={() => {
-                      setPlaying(false);
-                      setError(
-                        'This track could not be played. Check the link or try another audio file.'
-                      );
-                    }}
-                  />
+                  <>
+                    <audio
+                      key={active.id}
+                      ref={audio}
+                      className="music-audio-element"
+                      preload="metadata"
+                      src={active.src}
+                      onLoadedMetadata={event => {
+                        setDuration(
+                          Number.isFinite(event.currentTarget.duration)
+                            ? event.currentTarget.duration
+                            : 0
+                        );
+                        event.currentTarget.volume = volume;
+                        if (continuePlayback.current) {
+                          continuePlayback.current = false;
+                          void event.currentTarget
+                            .play()
+                            .catch(() => setError('Press play to continue listening.'));
+                        }
+                      }}
+                      onTimeUpdate={event => setPosition(event.currentTarget.currentTime)}
+                      onPlay={() => setPlaying(true)}
+                      onPause={() => setPlaying(false)}
+                      onEnded={() => {
+                        setPlaying(false);
+                        const next = tracks[tracks.findIndex(track => track.id === activeId) + 1];
+                        if (next) {
+                          selectTrack(next.id);
+                          continuePlayback.current = true;
+                        }
+                      }}
+                      onError={() => {
+                        setPlaying(false);
+                        setError(
+                          'This track could not be played. Check the link or try another audio file.'
+                        );
+                      }}
+                    />
+                    <div className="music-controls">
+                      <div className="music-seek">
+                        <span>{timeLabel(position)}</span>
+                        <input
+                          aria-label="Playback position"
+                          type="range"
+                          min="0"
+                          max={duration || 1}
+                          step="0.1"
+                          value={Math.min(position, duration || 1)}
+                          disabled={!duration}
+                          onChange={e => {
+                            const value = Number(e.target.value);
+                            if (audio.current) audio.current.currentTime = value;
+                            setPosition(value);
+                          }}
+                        />
+                        <span>{timeLabel(duration)}</span>
+                      </div>
+                      <div className="music-transport">
+                        <button
+                          aria-label="Previous track"
+                          disabled={tracks.findIndex(t => t.id === activeId) <= 0}
+                          onClick={() =>
+                            selectTrack(tracks[tracks.findIndex(t => t.id === activeId) - 1].id)
+                          }
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 5h2v14H6zm13 0v14L9 12z" />
+                          </svg>
+                        </button>
+                        <button
+                          className="music-play-button"
+                          aria-label={playing ? 'Pause' : 'Play'}
+                          onClick={() => {
+                            if (!audio.current) return;
+                            if (playing) audio.current.pause();
+                            else
+                              void audio.current
+                                .play()
+                                .catch(() =>
+                                  setError('Unable to play this track. Check its audio source.')
+                                );
+                          }}
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d={playing ? 'M6 5h4v14H6zm8 0h4v14h-4z' : 'M8 4v16l13-8z'} />
+                          </svg>
+                        </button>
+                        <button
+                          aria-label="Next track"
+                          disabled={tracks.findIndex(t => t.id === activeId) >= tracks.length - 1}
+                          onClick={() =>
+                            selectTrack(tracks[tracks.findIndex(t => t.id === activeId) + 1].id)
+                          }
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M16 5h2v14h-2zM5 5l10 7-10 7z" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="music-volume">
+                        <button
+                          aria-label={volume === 0 ? 'Unmute' : 'Mute'}
+                          onClick={() => {
+                            const value = volume === 0 ? lastVolume.current : 0;
+                            if (volume > 0) lastVolume.current = volume;
+                            setVolume(value);
+                            if (audio.current) audio.current.volume = value;
+                          }}
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            aria-hidden="true"
+                          >
+                            <path d="M3 9h4l5-4v14l-5-4H3z" />
+                            {volume ? (
+                              <path d="M16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" />
+                            ) : (
+                              <path d="m16 9 6 6m0-6-6 6" />
+                            )}
+                          </svg>
+                        </button>
+                        <input
+                          aria-label="Volume"
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          value={volume}
+                          onChange={e => {
+                            const value = Number(e.target.value);
+                            setVolume(value);
+                            if (audio.current) audio.current.volume = value;
+                          }}
+                        />
+                        <span>{Math.round(volume * 100)}%</span>
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <button className="dash-button" onClick={() => files.current?.click()}>
                     <Icon name="music" />
