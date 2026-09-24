@@ -116,7 +116,7 @@
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   align-items: center;
-  padding: 40px;
+  padding: 32px 40px;
   background: #f3edf2;
   border: 1px solid #e9dfe7;
   border-radius: 18px;
@@ -130,7 +130,7 @@
   font-size: clamp(32px, 3.5vw, 48px);
   line-height: 1.12;
   letter-spacing: -1.7px;
-  margin: 20px 0 18px;
+  margin: 16px 0 14px;
   font-weight: 550;
 }
 .dash-hero h2 em {
@@ -148,7 +148,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 26px;
+  margin-top: 20px;
 }
 .dash-button {
   display: inline-flex;
@@ -695,7 +695,7 @@
     font-size: 13px;
   }
   .dash-hero {
-    padding: 56px;
+    padding: 40px 48px;
     border-radius: 22px;
   }
   .dash-hero .dash-eyebrow {
@@ -710,7 +710,7 @@
   }
   .dash-actions {
     gap: 14px;
-    margin-top: 30px;
+    margin-top: 24px;
   }
   .dash-button {
     min-height: 50px;
@@ -722,7 +722,7 @@
     height: 19px;
   }
   .dash-hero-art {
-    height: 320px;
+    height: 290px;
   }
   .dash-record {
     width: 230px;
@@ -821,5 +821,59 @@
   }
   .dash-footer {
     font-size: 12px;
+  }
+}
+
+/* Slow decorative motion; preserve the illustration's original positioning. */
+@media (prefers-reduced-motion: no-preference) {
+  .dash-record {
+    animation: dash-record-float 7s ease-in-out infinite;
+  }
+  .dash-orbit {
+    animation: dash-orbit-sway 12s ease-in-out infinite;
+  }
+  .dash-art-label {
+    animation: dash-label-float 6s ease-in-out -2s infinite;
+  }
+  .dash-art-spark {
+    animation: dash-spark-breathe 4s ease-in-out infinite;
+  }
+}
+@keyframes dash-record-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-20deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-16deg);
+  }
+}
+@keyframes dash-orbit-sway {
+  0%,
+  100% {
+    transform: rotate(-35deg);
+  }
+  50% {
+    transform: rotate(-26deg);
+  }
+}
+@keyframes dash-label-float {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px) rotate(-3deg);
+  }
+}
+@keyframes dash-spark-breathe {
+  0%,
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.12) rotate(12deg);
+    opacity: 1;
   }
 }
