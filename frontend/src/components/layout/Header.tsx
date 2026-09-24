@@ -14,7 +14,9 @@ export default function Header() {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
   const [checkingCreator, setCheckingCreator] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  );
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -61,7 +63,11 @@ export default function Header() {
   const closeModal = () => setIsModalOpen(false);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const closeProfile = () => setIsProfileOpen(false);
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = nextTheme;
+    setTheme(nextTheme);
+  };
 
   const handleLogout = () => {
     setShowLogoutConfirm(true);
