@@ -251,3 +251,46 @@
     }
   }
 }
+
+/* Give navigation more presence on larger desktop displays. */
+@media (min-width: 1600px) {
+  .dashboard .dash-shell {
+    grid-template-columns: clamp(280px, 16vw, 320px) minmax(0, 1fr);
+  }
+  .app-sidebar {
+    padding: 36px 24px 24px;
+  }
+  .app-sidebar .side-heading {
+    padding-bottom: 28px;
+  }
+  .app-sidebar .side-heading h2 {
+    font-size: 23px;
+  }
+  .app-sidebar .side-overline {
+    font-size: 10px;
+  }
+  .app-sidebar .side-nav {
+    gap: 8px;
+  }
+  .app-sidebar .side-link {
+    min-height: 54px;
+    gap: 15px;
+    font-size: 15px;
+  }
+  .app-sidebar .side-link > svg {
+    width: 22px;
+    height: 22px;
+  }
+  .app-sidebar .side-note {
+    padding: 24px 20px;
+  }
+  .app-sidebar .side-note h3 {
+    font-size: 15px;
+  }
+  .app-sidebar .side-note p {
+    font-size: 12px;
+  }
+  .app-sidebar .side-bottom-caption {
+    font-size: 11px;
+  }
+}
