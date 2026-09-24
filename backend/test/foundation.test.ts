@@ -9,7 +9,7 @@ import { generateRoomCode } from '../src/utils/roomCode';
 import { attachSocketServer } from '../src/websocket';
 
 // No database queries are made by these tests.
-process.env.DATABASE_URL = 'postgresql://test:test@127.0.0.1:5432/hangout_test';
+process.env.DATABASE_URL = 'postgresql://postgres:1234@localhost:5432/hangout';
 
 test('configuration rejects missing database and invalid port', () => {
   assert.throws(() => readEnv({}), /DATABASE_URL/);
@@ -33,7 +33,9 @@ test('HTTP diagnostics, disabled recovery, errors, and socket acknowledgement', 
   try {
     const health = await fetch(`${url}/health`);
     assert.deepEqual(await health.json(), { ok: true });
-    assert.equal((await fetch(`${url}/missing`)).status, 404);
+    const missingRes = await fetch(`${url}/missing`, { credentials: 'omit' });
+    console.log('Missing response status:', missingRes.status);
+    assert.equal(missingRes.status, 404);
     assert.equal((await fetch(`${url}/api/reset-password`, { method: 'POST' })).status, 501);
     const malformed = await fetch(`${url}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' });
     assert.equal(malformed.status, 400);
