@@ -51,13 +51,15 @@ export default function AuthLayout({
           </div>
         </aside>
         <section className="auth-card" aria-labelledby="auth-title">
-          <div className="auth-heading">
-            <h2 id="auth-title" tabIndex={-1}>
-              {title}
-            </h2>
-            <p>{subtitle}</p>
+          <div className="auth-card-content">
+            <div className="auth-heading">
+              <h2 id="auth-title" tabIndex={-1}>
+                {title}
+              </h2>
+              <p>{subtitle}</p>
+            </div>
+            {children}
           </div>
-          {children}
         </section>
       </main>
       <footer className="auth-footer">A place for your people.</footer>
