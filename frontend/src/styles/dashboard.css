@@ -83,7 +83,7 @@
   overflow-wrap: anywhere;
 }
 .dash-main {
-  padding: 38px clamp(24px, 4vw, 64px) 0;
+  padding: 20px clamp(24px, 4vw, 64px) 0;
   min-width: 0;
 }
 .dash-page-heading {
@@ -562,7 +562,7 @@
 }
 @media (min-width: 1600px) {
   .dash-main {
-    padding-top: 48px;
+    padding-top: 24px;
   }
   .dash-hero {
     padding: 48px;
@@ -590,7 +590,7 @@
 }
 @media (max-width: 900px) {
   .dash-main {
-    padding: 28px 24px 0;
+    padding: 20px 24px 0;
   }
   .dashboard .header {
     padding: 0 24px;
@@ -620,7 +620,7 @@
     display: none;
   }
   .dash-main {
-    padding: 24px 16px 0;
+    padding: 16px 16px 0;
   }
   .dash-page-heading h1 {
     font-size: 23px;
@@ -677,7 +677,7 @@
 @media (min-width: 1600px) {
   .dashboard .dash-main {
     max-width: 1680px;
-    padding: 48px clamp(48px, 4vw, 80px) 0;
+    padding: 24px clamp(48px, 4vw, 80px) 0;
   }
   .dash-page-heading {
     margin-bottom: 36px;

@@ -57,7 +57,6 @@ export default function Sidebar({
     <>
       <div className="side-heading">
         <div>
-          <span className="side-overline">HANGOUT</span>
           <h2>Your space</h2>
         </div>
         {mobile && (

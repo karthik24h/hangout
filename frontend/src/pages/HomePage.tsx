@@ -58,7 +58,6 @@ export default function HomePage() {
         <main className="dash-main">
           <div className="dash-page-heading">
             <div>
-              <p className="dash-eyebrow">MAKE YOURSELF AT HOME</p>
               <h1>
                 Hey {user?.name?.split(' ')[0] || 'there'}
                 <span>, welcome back.</span>
