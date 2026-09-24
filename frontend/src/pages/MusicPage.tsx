@@ -114,8 +114,7 @@ export default function MusicPage() {
         <main className="dash-main music-main">
           <div className="music-heading">
             <div>
-              <p className="music-kicker">YOUR LISTENING SPACE</p>
-              <h1>Find your rhythm.</h1>
+                <h1>Find your rhythm.</h1>
               <p>Your music. A little room to unwind.</p>
             </div>
             <button className="dash-button primary" onClick={() => files.current?.click()}>
