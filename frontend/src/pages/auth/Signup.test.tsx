@@ -40,7 +40,7 @@ describe('Signup Page', () => {
 
     expect(screen.getByPlaceholderText('Enter your name')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Create a password (min 8 chars)')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Create a password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
     expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
   });
@@ -56,7 +56,7 @@ describe('Signup Page', () => {
     fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
       target: { value: 'existing@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Create a password (min 8 chars)'), {
+    fireEvent.change(screen.getByPlaceholderText('Create a password'), {
       target: { value: 'password123' },
     });
     fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
@@ -74,7 +74,7 @@ describe('Signup Page', () => {
     fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
       target: { value: 'test1@gmail.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Create a password (min 8 chars)'), {
+    fireEvent.change(screen.getByPlaceholderText('Create a password'), {
       target: { value: 'short' },
     });
     fireEvent.submit(screen.getByRole('button', { name: /sign up/i }).closest('form')!);

@@ -90,7 +90,7 @@ export default function Signup() {
             id="password"
             type="password"
             className="form-input"
-            placeholder="Create a password (min 8 chars)"
+            placeholder="Create a password"
             minLength={8}
             aria-describedby="signup-password-help"
             autoComplete="new-password"
