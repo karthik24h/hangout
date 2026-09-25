@@ -30,6 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local uploaded media and transcoding workspace
+backend/storage/
+
 # Local database files (SQL migrations remain trackable)
 *.db
 *.db-journal
