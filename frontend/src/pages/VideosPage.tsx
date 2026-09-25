@@ -51,7 +51,7 @@ export default function VideosPage() {
       </div>
       {create && <CreateRoomModal onClose={() => setCreate(false)} initialType="video" />}
       {join && <JoinRoomModal onClose={() => setJoin(false)} />}
-      {addMedia && <AddMediaModal roomCode={roomCode || ""} onClose={() => setAddMedia(false)} onAdd={setMedia} />}
+      {addMedia && <AddMediaModal onClose={() => setAddMedia(false)} onAdd={setMedia} />}
     </div>
   );
 }

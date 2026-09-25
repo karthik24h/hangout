@@ -10,7 +10,6 @@ import { authMiddleware } from './middleware/auth';
 import { errorHandler } from './utils/errors';
 import auth from './routes/auth';
 import rooms from './routes/rooms';
-import media from './routes/media';
 
 const csrfTokens = new Map<string, string>();
 
@@ -133,7 +132,6 @@ export function createApp() {
 
   app.use(auth);
   app.use(rooms);
-  app.use(media);
   app.use((_req, res) => {
     res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
   });
