@@ -39,3 +39,6 @@
 .videos-room-banner{min-height:48px;padding:9px 14px;border-radius:13px;background:linear-gradient(90deg,rgba(124,92,252,.08),rgba(124,92,252,.035));box-shadow:0 4px 12px rgba(92,65,100,.04)}.videos-room-banner a{padding:6px 10px;border-radius:8px}.videos-room-banner a:hover{background:rgba(124,92,252,.09)}
 :root[data-theme='dark'] .videos-room-banner{background:linear-gradient(90deg,rgba(196,154,186,.12),rgba(196,154,186,.05));border-color:#4b3d50;color:#d9cddc;box-shadow:none}:root[data-theme='dark'] .videos-room-banner a{color:#e0b9d8}:root[data-theme='dark'] .videos-player--empty{background:#111016}:root[data-theme='dark'] .videos-player--empty h3{color:#f7f4f8}:root[data-theme='dark'] .videos-player--empty p{color:#b8b2bf}
 @media(max-width:700px){.videos-room-banner{align-items:center;min-height:44px;padding:8px 11px}.videos-room-banner a{margin-left:auto;width:auto}.videos-player--empty{min-height:320px}}
+
+/* Active room already has context in the shared-screen header and footer. */
+.videos-room-banner{display:none}
