@@ -308,3 +308,8 @@
   .side-drawer .side-note,.side-drawer .side-bottom-caption{display:none}
   .side-drawer .side-heading{justify-content:flex-end;margin-bottom:16px}
 }
+
+@media(max-width:700px){
+  .side-mobile-bar{left:16px}
+  .dashboard .header-left .header-logo{margin-left:52px}
+}
