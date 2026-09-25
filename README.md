@@ -123,7 +123,8 @@ Tests cover foundation behavior without a running database. Full signup/login/ro
 | frontend/.env | VITE_SOCKET_URL | Backend socket origin |
 | backend/.env | DATABASE_URL | Required PostgreSQL connection string |
 | backend/.env | PORT | HTTP/socket port, default 5000 |
-| backend/.env | FRONTEND_URL | Allowed browser origin, default http://localhost:3000 |
+| backend/.env | FRONTEND_URL | Primary browser origin, default http://localhost:3000 |
+| backend/.env | ADDITIONAL_FRONTEND_ORIGINS | Optional comma-separated browser origins for API and sockets; use http://localhost:3001 when Vite falls back to port 3001. Restart the backend after changes. |
 
 Restart development servers after changing configuration. Existing hardcoded database credentials have been removed. The legacy unverified password-reset endpoint now returns 501 until secure recovery is implemented.
 
@@ -142,3 +143,5 @@ The [expanded roadmap](docs/features.md) adds cinematic rooms, floating reaction
 ## Planned operations console
 
 The [console plan](docs/admin-console.md) covers management, moderation, reports, audit, health, security, settings, and phased operational tools. Its proposed entry is `/ops/lantern-7c42/login`, with no `/admin` alias. This route is not implemented and is not a security boundary: privileged server sessions, MFA, and API/socket permissions must come first. All console work is unchecked in the roadmap.
+
+CORS uses an exact origin allowlist shared by the API and Socket.IO. Origins must be HTTP(S) URLs without paths, credentials, queries, or fragments. Cookie credentials and the Content-Type/X-CSRF-Token request headers are supported; preflight responses are cached for 10 minutes. Unlisted browser origins are rejected. Requests without an Origin header remain subject to the normal authentication and CSRF checks. Set production origins explicitly and remove unused development origins.

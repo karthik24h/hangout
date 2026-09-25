@@ -6,7 +6,7 @@ import { attachSocketServer } from './websocket';
 
 const env = readEnv();
 const server = createServer(createApp());
-const io = attachSocketServer(server, env.frontendUrl);
+const io = attachSocketServer(server, env.frontendOrigins);
 server.listen(env.port, () => console.log(`Server running on http://localhost:${env.port}`));
 let stopping = false;
 function shutdown() {

@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import crypto from 'node:crypto';
 import { readEnv } from './config/env';
+import { createCorsOptions, isOriginAllowed } from './config/cors';
 import { authMiddleware } from './middleware/auth';
 import { errorHandler } from './utils/errors';
 import auth from './routes/auth';
@@ -68,6 +69,18 @@ export function createApp() {
     })
   );
 
+  const { frontendOrigins } = readEnv();
+  // Reject cross-origin requests before route handlers, including simple requests.
+  app.use((req, res, next) => {
+    res.vary('Origin');
+    if (!isOriginAllowed(req.headers.origin, frontendOrigins)) {
+      return res.status(403).json({ error: 'Origin not allowed', code: 'ORIGIN_NOT_ALLOWED' });
+    }
+    next();
+  });
+  // Preflight requests must finish before authentication and rate limiting.
+  app.use(cors(createCorsOptions(frontendOrigins)));
+
   // Rate limiting (skip in test and development environments)
   if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'development') {
     const limiter = rateLimit({
@@ -93,7 +106,6 @@ export function createApp() {
     app.use('/api/reset-password', authLimiter);
   }
 
-  app.use(cors({ origin: readEnv().frontendUrl, credentials: true }));
   app.use(express.json({ limit: '32kb' }));
   app.use(cookieParser());
   app.use(authMiddleware);

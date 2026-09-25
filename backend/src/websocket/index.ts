@@ -1,3 +1,4 @@
+import { createCorsOptions, isOriginAllowed } from '../config/cors';
 import { roomMusic } from '../utils/music';
 import { isAppError } from '../utils/errors';
 import type { Server as HttpServer } from 'node:http';
@@ -30,16 +31,17 @@ declare module 'socket.io' {
   }
 }
 
-export function attachSocketServer(server: HttpServer, frontendUrl: string) {
+export function attachSocketServer(server: HttpServer, frontendUrl: string | string[]) {
+  const allowedOrigins = Array.isArray(frontendUrl) ? frontendUrl : [frontendUrl];
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
-    cors: { origin: frontendUrl, credentials: true },
+    cors: createCorsOptions(allowedOrigins),
     maxHttpBufferSize: 16_384,
   });
 
   // Session validation middleware for Socket.IO
   io.use(async (socket, next) => {
     try {
-      if (socket.handshake.headers.origin && socket.handshake.headers.origin !== frontendUrl) {
+      if (!isOriginAllowed(socket.handshake.headers.origin, allowedOrigins)) {
         return next(new Error('Origin not allowed'));
       }
       // Get cookie from handshake headers
