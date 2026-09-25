@@ -14,10 +14,10 @@ const incomingDir = path.join(storageRoot, 'incoming');
 const processedDir = path.join(storageRoot, 'processed');
 const upload = multer({ dest: incomingDir, limits: { fileSize: 5 * 1024 * 1024 * 1024 }, fileFilter: (_req, file, cb) => cb(null, file.mimetype.startsWith('video/')) });
 
-function transcode(input: string, output: string) {
+function runFfmpeg(args: string[]) {
   return new Promise<void>((resolve, reject) => {
     if (!ffmpegPath) return reject(new Error('FFmpeg is unavailable'));
-    const child = spawn(ffmpegPath, ['-y', '-i', input, '-c:v', 'libx264', '-preset', 'veryfast', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', output]);
+    const child = spawn(ffmpegPath, args);
     let error = '';
     child.stderr.on('data', chunk => { error += String(chunk); });
     child.on('error', reject);
@@ -25,7 +25,31 @@ function transcode(input: string, output: string) {
   });
 }
 
-router.post('/api/rooms/:roomCode/media', requireAuth, upload.single('video'), async (req, res, next) => {
+async function transcode(input: string, output: string) {
+  // Copying an already-compatible video stream avoids a CPU-heavy re-encode.
+  const fastOutput = `${output}.copy.mp4`;
+  try {
+    await runFfmpeg(['-y', '-i', input, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', fastOutput]);
+    await fs.rename(fastOutput, output);
+    return;
+  } catch {
+    await fs.rm(fastOutput, { force: true });
+  }
+
+  // Fall back for codecs/containers that browsers cannot play directly.
+  await runFfmpeg(['-y', '-i', input, '-c:v', 'libx264', '-preset', 'veryfast', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', output]);
+}
+
+async function ensureIncomingDirectory(_req: Request, _res: unknown, next: (error?: unknown) => void) {
+  try {
+    await fs.mkdir(incomingDir, { recursive: true });
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+router.post('/api/rooms/:roomCode/media', requireAuth, ensureIncomingDirectory, upload.single('video'), async (req, res, next) => {
   let input = '';
   try {
     if (!req.file) return res.status(400).json({ error: 'A video file is required.' });
