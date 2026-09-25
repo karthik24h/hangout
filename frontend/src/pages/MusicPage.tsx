@@ -1,3 +1,4 @@
+import { readAudioDetails } from '../lib/audioMetadata';
 import SharedMusic from '../components/music/SharedMusic';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -10,7 +11,15 @@ import { apiFetch } from '../services/api';
 import '../styles/dashboard.css';
 import './music.css';
 
-type Track = { id: string; title: string; src: string; source: string };
+type Track = {
+  id: string;
+  title: string;
+  src: string;
+  source: string;
+  artist?: string;
+  album?: string;
+  artwork?: string;
+};
 type Room = {
   id: number;
   name: string;
@@ -115,6 +124,8 @@ export default function MusicPage() {
     }
     setTracks(remaining);
     if (objectUrls.current.delete(track.src)) URL.revokeObjectURL(track.src);
+    if (track.artwork && objectUrls.current.delete(track.artwork))
+      URL.revokeObjectURL(track.artwork);
   }
 
   return (
@@ -152,8 +163,30 @@ export default function MusicPage() {
                 valid.map(file => {
                   const src = URL.createObjectURL(file);
                   objectUrls.current.add(src);
+                  const id = crypto.randomUUID();
+                  void readAudioDetails(file).then(details => {
+                    // The file may have been removed or the page unmounted while parsing.
+                    if (!objectUrls.current.has(src)) return;
+                    const artwork = details.artwork
+                      ? URL.createObjectURL(details.artwork)
+                      : undefined;
+                    if (artwork) objectUrls.current.add(artwork);
+                    setTracks(previous =>
+                      previous.map(track =>
+                        track.id === id
+                          ? {
+                              ...track,
+                              title: details.title || track.title,
+                              artist: details.artist,
+                              album: details.album,
+                              artwork,
+                            }
+                          : track
+                      )
+                    );
+                  });
                   return {
-                    id: crypto.randomUUID(),
+                    id,
                     title: file.name.replace(/\.[^.]+$/, ''),
                     src,
                     source: 'Local file',
@@ -189,20 +222,34 @@ export default function MusicPage() {
                   <h2 id="now-playing-title">Now playing</h2>
                   <span className="music-badge">On this device</span>
                 </div>
-                <div className={`music-artwork${playing ? ' is-playing' : ''}`} aria-hidden="true">
-                  <span className="music-floating-note note-one">♪</span>
-                  <span className="music-floating-note note-two">♫</span>
-                  <span className="music-floating-note note-three">♩</span>
-                  <span className="music-floating-note note-four">♫</span>
-                  <div className="music-vinyl">
-                    <div>
+                <div className="music-artwork">
+                  {active?.artwork ? (
+                    <img
+                      key={active.artwork}
+                      src={active.artwork}
+                      alt={`Album artwork for ${active.album || active.title}`}
+                      onError={() =>
+                        setTracks(previous =>
+                          previous.map(track =>
+                            track.id === active.id ? { ...track, artwork: undefined } : track
+                          )
+                        )
+                      }
+                    />
+                  ) : (
+                    <div className="music-artwork-fallback">
                       <Icon name="music" />
+                      <span>{active ? 'No album artwork' : 'Your music starts here'}</span>
                     </div>
-                  </div>
+                  )}
                 </div>
-                <div className="music-track-info">
+                <div className="music-track-info" aria-live="polite">
                   <h3>{active?.title || 'Make room for a little music'}</h3>
-                  <p>{active ? active.source : 'Add your first track to start listening.'}</p>
+                  <p>
+                    {active
+                      ? [active.artist, active.album].filter(Boolean).join(' · ') || active.source
+                      : 'Add your first track to start listening.'}
+                  </p>
                 </div>
                 {active ? (
                   <>
@@ -354,8 +401,7 @@ export default function MusicPage() {
                   </button>
                 )}
                 <p className="music-local-note">
-                  Playback and queue stay in this browser session. Audio is not uploaded or
-                  synchronized with room members.
+                  Only on this device · Files and artwork stay in your browser.
                 </p>
               </section>
               <section className="music-queue-panel" aria-labelledby="queue-title">
@@ -377,9 +423,16 @@ export default function MusicPage() {
                           <span className="music-track-number">
                             {String(index + 1).padStart(2, '0')}
                           </span>
+                          <span className="music-queue-artwork" aria-hidden="true">
+                            {track.artwork ? (
+                              <img src={track.artwork} alt="" />
+                            ) : (
+                              <Icon name="music" />
+                            )}
+                          </span>
                           <span>
                             <strong>{track.title}</strong>
-                            <small>{track.source}</small>
+                            <small>{track.artist || track.source}</small>
                           </span>
                         </button>
                         <button
