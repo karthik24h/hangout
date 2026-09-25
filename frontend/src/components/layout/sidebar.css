@@ -313,3 +313,6 @@
   .side-mobile-bar{left:16px}
   .dashboard .header-left .header-logo{margin-left:52px}
 }
+@media(max-width:700px){.dashboard .header-left .header-logo{margin-left:20px}}
+@media(max-width:700px){.side-mobile-bar{top:-74px}}
+@media(max-width:700px){.side-mobile-bar{top:-64px}}
