@@ -13,3 +13,10 @@
 .videos-empty-hero__art{background:radial-gradient(circle at 50% 45%,rgba(186,139,205,.3),transparent 42%),#141119}
 .videos-empty-hero__copy{color:var(--color-text-primary)}
 .videos-empty-hero__copy .videos-eyebrow{color:var(--color-accent)}
+
+/* Premium cinema hero */
+.videos-empty-hero{grid-template-columns:1.05fr .95fr;gap:30px;min-height:330px;padding:40px 48px;background:linear-gradient(120deg,#1b1720 0%,#2f2137 58%,#3d2947 100%);border-color:#48324e;box-shadow:0 18px 36px rgba(38,24,43,.14)}
+.videos-empty-hero__copy{order:1;padding:0;position:relative;z-index:2}.videos-empty-hero__copy .videos-eyebrow{color:#d8a9d5}.videos-empty-hero__copy h2{max-width:490px;margin:9px 0 13px;color:#fff;font-size:clamp(2rem,3.5vw,3rem);line-height:1.05;letter-spacing:-.045em}.videos-empty-hero__copy p:not(.videos-eyebrow){max-width:480px;color:#c9bdcd}.videos-empty-hero__art{order:2;min-height:250px;border:1px solid rgba(255,255,255,.14);background:radial-gradient(circle at 50% 42%,rgba(208,147,212,.3),transparent 38%),linear-gradient(145deg,#211925,#100e14);box-shadow:0 20px 35px rgba(0,0,0,.24)}.videos-empty-hero__art:before{content:'';position:absolute;inset:17px;border:1px solid rgba(255,255,255,.09);border-radius:10px}.videos-empty-hero__art:after{color:rgba(255,255,255,.65)}.videos-film-frame{width:64%;z-index:1}.videos-actions .videos-button--secondary{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff}.videos-actions .videos-button--secondary:hover{background:rgba(255,255,255,.14)}
+@media(max-width:800px){.videos-empty-hero{grid-template-columns:1fr;gap:24px;padding:28px;min-height:0}.videos-empty-hero__copy{order:1}.videos-empty-hero__art{order:2;min-height:220px}}
+/* Light-theme contrast fallback for the existing hero copy node. */
+.videos-empty-hero>div:nth-child(2){order:1;padding:0;position:relative;z-index:2;color:#fff}.videos-empty-hero>div:nth-child(2) h2{color:#fff}.videos-empty-hero>div:nth-child(2) p:not(.videos-eyebrow){color:#c9bdcd}.videos-empty-hero>div:nth-child(2) .videos-eyebrow{color:#d8a9d5}
