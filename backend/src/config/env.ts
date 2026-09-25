@@ -21,6 +21,12 @@ function parseOrigin(value: string, setting: string): string {
   }
 }
 
+function parsePositiveInteger(value: string | undefined, fallback: number, setting: string): number {
+  const parsed = Number(value || fallback);
+  if (!Number.isSafeInteger(parsed) || parsed < 1) throw new Error(`${setting} must be a positive integer`);
+  return parsed;
+}
+
 export function readEnv(source: NodeJS.ProcessEnv = process.env) {
   const port = Number(source.PORT || 5000);
   if (!Number.isInteger(port) || port < 1 || port > 65535)
@@ -42,5 +48,20 @@ export function readEnv(source: NodeJS.ProcessEnv = process.env) {
         .map(origin => parseOrigin(origin, 'ADDITIONAL_FRONTEND_ORIGINS')),
     ]),
   ];
-  return { port, databaseUrl, frontendUrl, frontendOrigins };
+  const mediaMaxFileBytes = parsePositiveInteger(source.MEDIA_MAX_FILE_BYTES, 5 * 1024 ** 3, 'MEDIA_MAX_FILE_BYTES');
+  const mediaMaxUserBytes = parsePositiveInteger(source.MEDIA_MAX_USER_BYTES, 20 * 1024 ** 3, 'MEDIA_MAX_USER_BYTES');
+  const mediaMaxUserItems = parsePositiveInteger(source.MEDIA_MAX_USER_ITEMS, 20, 'MEDIA_MAX_USER_ITEMS');
+  const mediaMaxDurationSeconds = parsePositiveInteger(source.MEDIA_MAX_DURATION_SECONDS, 4 * 60 * 60, 'MEDIA_MAX_DURATION_SECONDS');
+  if (mediaMaxUserBytes < mediaMaxFileBytes) throw new Error('MEDIA_MAX_USER_BYTES must be at least MEDIA_MAX_FILE_BYTES');
+  return {
+    port,
+    databaseUrl,
+    frontendUrl,
+    frontendOrigins,
+    mediaStorageDir: source.MEDIA_STORAGE_DIR || './storage/media',
+    mediaMaxFileBytes,
+    mediaMaxUserBytes,
+    mediaMaxUserItems,
+    mediaMaxDurationSeconds,
+  };
 }
