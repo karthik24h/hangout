@@ -12,6 +12,7 @@ export default function CreateRoomModal({
   const [roomName, setRoomName] = useState('');
   const [setPassword, setSetPassword] = useState(false);
   const [password, setPasswordValue] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [mediaType, setMediaType] = useState<'video' | 'music'>(initialType);
   const [privacy, setPrivacy] = useState<'public' | 'private' | 'invite_only'>('public');
@@ -148,14 +149,27 @@ export default function CreateRoomModal({
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  className="form-input"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={e => setPasswordValue(e.target.value)}
-                />
+                <div className="password-field">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="form-input"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={e => setPasswordValue(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(value => !value)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      {showPassword ? <><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></> : <><path d="m3 3 18 18" /><path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3 3.7M6.7 6.8C4.1 8.2 2.5 12 2.5 12s3.5 6 9.5 6a9 9 0 0 0 3.2-.6" /></>}
+                    </svg>
+                  </button>
+                </div>
               </div>
             )}
 
