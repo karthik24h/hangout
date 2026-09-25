@@ -12,7 +12,7 @@ export interface AuthResponse {
 
 export async function apiFetch(path: string, options?: RequestInit): Promise<Response> {
   const headers = new Headers(options?.headers);
-  if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  if (!headers.has('Content-Type') && !(options?.body instanceof FormData)) headers.set('Content-Type', 'application/json');
   if (
     path.startsWith('/rooms') &&
     !['GET', 'HEAD'].includes((options?.method || 'GET').toUpperCase())
